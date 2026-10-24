@@ -27,6 +27,10 @@ function partHTML(p, kind) {
 const termHTML = parts => `<span class="part">${parts.map((p, i) =>
   `${i ? '<span class="sep">/</span>' : ""}<span class="hl k-${p.type}">${esc(p.text)}</span>`).join("")}</span>`;
 
+// colour of a bare part (look-alikes): the kind of its own table row; hyphen position only as a fallback
+const KIND = {};
+C.sections.forEach(s => s.rows.forEach(r => [r.part, ...r.alts].forEach(f => { KIND[f.toLowerCase()] = KIND[f.toLowerCase()] || s.kind; })));
+const kindOfPart = p => (p = p.split(/,\s*/)[0], KIND[p.toLowerCase()]) || (p.startsWith("-") ? "suffix" : p.endsWith("-") ? "prefix" : "root");
 const byLec = (arr, l) => arr.filter(x => x.lec === l);
 const lecTitle = l => M.lectures.find(x => x.n === l);
 
@@ -137,7 +141,7 @@ ${C.analysis.map(a => `<tr><td><div class="term">${esc(a.term)}${a.workedOnSlide
 const look = `
 <section class="part-open"><div class="pn">4</div><h2>Look-alikes <span>don't mix them up</span></h2></section>
 <div class="looks">${C.lookalikes.map(g => `<div class="look"><h4>${esc(g.title)} <span class="ref">${esc(g.slide)}</span></h4>
-<table class="t mini"><tbody>${g.rows.map(r => `<tr><td>${r.part ? partHTML(r.part, r.part.startsWith("-") ? "suffix" : r.part.endsWith("-") ? "prefix" : "root") : ""}</td><td>${esc(r.meaning)}</td><td class="exm">${esc(r.example || "")}</td></tr>`).join("")}</tbody></table>
+<table class="t mini"><tbody>${g.rows.map(r => `<tr><td>${r.part ? partHTML(r.part, kindOfPart(r.part)) : ""}</td><td>${esc(r.meaning)}</td><td class="exm">${esc(r.example || "")}</td></tr>`).join("")}</tbody></table>
 ${g.tip ? `<p class="ar" lang="ar" dir="rtl">${esc(g.tip)} ${g.tipIsExtra ? EXTRA_AR : ""}</p>` : ""}</div>`).join("")}</div>`;
 
 /* ---------- part 5: spelling traps ---------- */
