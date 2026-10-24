@@ -1,0 +1,10 @@
+*.pdf
+!StudyPack/pdf/MedTerm-L1-L5-Study-Pack.pdf
+StudyPack/content/pages/
+node_modules/
+test-results/
+StudyPack/qa/shots/
+__pycache__/
+*.tgz
+*.apkg
+.vercel

@@ -1,0 +1,725 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Terminology Sprint L1–L5</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Noto+Sans:wght@400;500;600&family=Noto+Sans+Arabic:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: one narrow phone-first column; sticky tab bar; word parts colour-coded like the doctor's highlighter slide (prefix blue, root green, suffix pink). */
+:root{
+  --bg:#f6f7fb; --surface:#ffffff; --sunk:#eceef5; --fg:#1b1d2a; --muted:#5d6176; --line:#dcdfea;
+  --accent:#3b3fd8; --accent-ink:#ffffff;
+  --pre:#1a73c9; --pre-bg:#e3f0fc; --root:#17864a; --root-bg:#e2f5ea; --suf:#c4237a; --suf-bg:#fde6f2; --vow:#9a6a00; --vow-bg:#fff2cc;
+  --ok:#16824a; --ok-bg:#e3f6ea; --bad:#c8312f; --bad-bg:#fde8e7;
+  --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Noto Sans", "Noto Sans Arabic", "Segoe UI", system-ui, sans-serif;
+  --f-ar:"Noto Sans Arabic", "Noto Sans", "Segoe UI", Tahoma, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#12131b; --surface:#1b1d28; --sunk:#232634; --fg:#e9eaf2; --muted:#a2a6bb; --line:#2f3243;
+  --accent:#8e92ff; --accent-ink:#12131b;
+  --pre:#6cb4ff; --pre-bg:#16283d; --root:#5fd394; --root-bg:#14301f; --suf:#ff7dbe; --suf-bg:#3a1a2b; --vow:#f2c14e; --vow-bg:#3a3014;
+  --ok:#5fd394; --ok-bg:#14301f; --bad:#ff8a85; --bad-bg:#3d1b1b; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12131b; --surface:#1b1d28; --sunk:#232634; --fg:#e9eaf2; --muted:#a2a6bb; --line:#2f3243;
+  --accent:#8e92ff; --accent-ink:#12131b;
+  --pre:#6cb4ff; --pre-bg:#16283d; --root:#5fd394; --root-bg:#14301f; --suf:#ff7dbe; --suf-bg:#3a1a2b; --vow:#f2c14e; --vow-bg:#3a3014;
+  --ok:#5fd394; --ok-bg:#14301f; --bad:#ff8a85; --bad-bg:#3d1b1b; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.5}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 60px}
+[lang="ar"],.ar{font-family:var(--f-ar);direction:rtl;text-align:right}
+header.top{display:grid;gap:6px;margin-bottom:14px}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(28px,7vw,40px);line-height:1.05;margin:0;text-wrap:balance}
+h1 .p{color:var(--pre)} h1 .r{color:var(--root)} h1 .s{color:var(--suf)}
+.due{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pill{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:3px 10px;font-size:13px}
+.legend{display:flex;gap:6px;flex-wrap:wrap}
+.tag{font-family:var(--f-mono);font-size:12px;font-weight:700;border-radius:6px;padding:1px 7px}
+.tag.p{background:var(--pre-bg);color:var(--pre)} .tag.r{background:var(--root-bg);color:var(--root)} .tag.s{background:var(--suf-bg);color:var(--suf)} .tag.v{background:var(--vow-bg);color:var(--vow)}
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding-block:8px;margin-bottom:12px;border-bottom:1px solid var(--line)}
+nav.tabs button{font-family:var(--f-ar);font-size:14px;font-weight:700;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:10px;padding:8px 4px;cursor:pointer}
+nav.tabs button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+button{font:inherit}
+button:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-block:8px}
+.chip{border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:999px;padding:5px 12px;font-size:13px;font-weight:600;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin-block:6px 10px}
+.hint{color:var(--muted);font-size:13px}
+details.sec{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:10px}
+details.sec>summary{cursor:pointer;list-style:none;display:flex;gap:8px;align-items:center;padding:11px 12px;font-weight:600}
+details.sec>summary::-webkit-details-marker{display:none}
+details.sec>summary .meta{margin-left:auto;font-family:var(--f-mono);font-size:11px;color:var(--muted);white-space:nowrap}
+details.sec[open]>summary{border-bottom:1px solid var(--line)}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:600}
+tr:last-child td{border-bottom:0}
+td.part{font-family:var(--f-mono);font-weight:700;white-space:nowrap}
+td.part.p{color:var(--pre)} td.part.r{color:var(--root)} td.part.s{color:var(--suf)}
+td.ex{font-style:italic}
+td.def{color:var(--muted)}
+.hide-m td.m,.hide-m td.def{filter:blur(6px);cursor:pointer;user-select:none;transition:filter .15s}
+.hide-m td.m.show,.hide-m td.def.show{filter:none}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:10px}
+.card h3{font-family:var(--f-display);font-size:18px;margin:0 0 6px}
+.card p{margin:4px 0}
+ol.rules{margin:0;padding-left:20px;display:grid;gap:8px}
+code,.mono{font-family:var(--f-mono);font-size:13px}
+.note{background:var(--sunk);border-radius:8px;padding:8px 10px;font-size:13px}
+.cgrid{display:grid;gap:10px}
+.ctip{margin-top:6px;font-size:13px;color:var(--muted)}
+/* analyze */
+.big{font-family:var(--f-display);font-weight:800;font-size:clamp(26px,8vw,38px);margin:4px 0 10px;word-break:break-word}
+.parts{display:flex;flex-wrap:wrap;gap:6px;margin-block:8px}
+.wp{border-radius:8px;padding:5px 9px;display:grid;gap:1px;min-width:0}
+.wp b{font-family:var(--f-mono);font-size:15px}
+.wp small{font-size:12px}
+.wp.p{background:var(--pre-bg);color:var(--pre)} .wp.r{background:var(--root-bg);color:var(--root)} .wp.s{background:var(--suf-bg);color:var(--suf)} .wp.v{background:var(--vow-bg);color:var(--vow)}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.ok{background:var(--ok-bg);color:var(--ok);border-color:transparent}
+.btn.bad{background:var(--bad-bg);color:var(--bad);border-color:transparent}
+.btn:disabled{opacity:.5;cursor:default}
+/* quiz */
+.qhead{display:flex;justify-content:space-between;align-items:center;gap:8px;font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.progress{height:6px;background:var(--sunk);border-radius:99px;overflow:hidden;margin-block:6px 12px}
+.progress i{display:block;height:100%;background:var(--accent);width:0;transition:width .2s}
+.qtext{font-size:17px;font-weight:600;margin:6px 0 12px;text-wrap:pretty}
+.qtext .mono{font-size:16px}
+.opts{display:grid;gap:8px}
+.opt{text-align:left;border:1.5px solid var(--line);background:var(--surface);color:var(--fg);border-radius:10px;padding:11px 12px;cursor:pointer;font-size:15px}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt.right{border-color:var(--ok);background:var(--ok-bg);color:var(--ok);font-weight:600}
+.opt.wrong{border-color:var(--bad);background:var(--bad-bg);color:var(--bad)}
+.opt:disabled{cursor:default}
+.fb{margin-top:12px;border-radius:10px;padding:10px 12px;font-size:14px}
+.fb.ok{background:var(--ok-bg)} .fb.bad{background:var(--bad-bg)}
+.fb .src{display:block;margin-top:4px;font-family:var(--f-mono);font-size:11px;color:var(--muted);direction:ltr;text-align:left}
+.score{font-family:var(--f-display);font-weight:800;font-size:48px;line-height:1}
+.weak li{margin-bottom:4px}
+.stat{font-family:var(--f-mono);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">PharmD Clinical · Medical Terminology · L1 → L5</div>
+    <h1><span class="p">Terminology</span> <span class="r">Sprint</span><span class="s">.</span></h1>
+    <div class="due">
+      <span class="pill">📅 Term Work Exam · Sun 25 Oct 2026</span>
+      <span class="legend"><span class="tag p">prefix</span><span class="tag r">root</span><span class="tag v">vowel</span><span class="tag s">suffix</span></span>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button role="tab" id="t-review" aria-selected="true" data-tab="review">راجع</button>
+    <button role="tab" id="t-confuse" aria-selected="false" data-tab="confuse">المتلخبطين</button>
+    <button role="tab" id="t-analyze" aria-selected="false" data-tab="analyze">حلّل كلمة</button>
+    <button role="tab" id="t-quiz" aria-selected="false" data-tab="quiz">اختبرني</button>
+  </nav>
+
+  <!-- REVIEW -->
+  <section id="review" role="tabpanel">
+    <div class="bar">
+      <div class="chips" id="lecChips"></div>
+      <button class="chip" id="hideBtn" aria-pressed="false">🙈 اخفي المعاني</button>
+    </div>
+    <p class="hint ar" lang="ar">لما تخفي المعاني: قول المعنى في دماغك الأول، وبعدين دوس على الخانة عشان تتأكد.</p>
+    <div id="reviewBody"></div>
+  </section>
+
+  <!-- CONFUSE -->
+  <section id="confuse" role="tabpanel" hidden>
+    <p class="hint ar" lang="ar">دول الحاجات اللي بتتلخبط في بعض. الملاحظة اللي عليها (زيادة للفهم) مش من السلايدز، دي حيلة للحفظ بس.</p>
+    <div class="cgrid" id="confuseBody"></div>
+  </section>
+
+  <!-- ANALYZE -->
+  <section id="analyze" role="tabpanel" hidden>
+    <div class="card">
+      <div class="qhead"><span id="anCount"></span><span id="anStat"></span></div>
+      <p class="hint ar" lang="ar">زي الـ Training Sheet بالظبط: قسّم الكلمة لـ prefix وroot وsuffix، واكتب معنى كل جزء ومعنى الكلمة كلها في ورقة. بعدين اكشف الإجابة.</p>
+      <div class="big" id="anTerm"></div>
+      <div id="anAnswer" hidden>
+        <div class="parts" id="anParts"></div>
+        <p><b>Meaning:</b> <span id="anDef"></span></p>
+        <p class="stat" id="anSrc"></p>
+      </div>
+      <div class="row" style="margin-top:12px">
+        <button class="btn primary" id="anReveal">اكشف الإجابة</button>
+        <button class="btn ok" id="anGot" hidden>✅ صح</button>
+        <button class="btn bad" id="anMiss" hidden>❌ غلطت</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="quiz" role="tabpanel" hidden>
+    <div id="qSetup" class="card">
+      <h3>Quiz setup</h3>
+      <p class="hint ar" lang="ar">اختار المحاضرات وعدد الأسئلة. الأسئلة: MCQ، وTrue/False مع التصحيح، وجمع (plurals)، ونطق، وتعريفات. أي سؤال تغلط فيه هيرجعلك في الآخر بصيغة تانية.</p>
+      <div class="chips" id="qLecChips"></div>
+      <div class="chips" id="qCountChips"></div>
+      <div class="row"><button class="btn primary" id="qStart">ابدأ</button><button class="btn" id="qMissedOnly" hidden>راجع غلطاتي القديمة</button></div>
+    </div>
+    <div id="qRun" class="card" hidden>
+      <div class="qhead"><span id="qPos"></span><span id="qScore"></span></div>
+      <div class="progress"><i id="qBar"></i></div>
+      <div class="eyebrow" id="qKind"></div>
+      <div class="qtext" id="qText"></div>
+      <div class="opts" id="qOpts"></div>
+      <div id="qFb"></div>
+      <div class="row" style="margin-top:12px"><button class="btn primary" id="qNext" hidden>التالي</button></div>
+    </div>
+    <div id="qEnd" class="card" hidden></div>
+  </section>
+</div>
+
+<script>
+// Source: Dr. Shaimaa Gomaa (L1–L3) & Dr. Hagar Belal / Dr. Amira (L4–L5) slides. s = slide (PDF page) number.
+const SECTIONS = [
+  // ---------- L3 ROOTS ----------
+  {id:"phys", lec:3, slide:"7–9", kind:"r", title:"Roots pertaining to physical factors", rows:[
+    ["aer/o","air, gas","aerobe","Organism that requires air (oxygen) to live"],
+    ["bar/o","pressure","barotrauma","Injury (trauma) caused by pressure"],
+    ["chrom/o, chromat/o","color, stain","chromatic","Pertaining to color"],
+    ["cry/o","cold","cryoprobe","Instrument used to apply extreme cold to tissues"],
+    ["electr/o","electricity","electroshock","Shock produced by electricity"],
+    ["kine, kinesi/o, kinet/o","movement","kinesis","Movement"],
+    ["phot/o","light","photosensitive","Abnormally sensitive to light"],
+    ["radi/o","radiation, X-ray","radioactive","Giving off radiation"],
+    ["son/o","sound","ultrasound","Pertaining to high frequency sound waves (beyond human hearing)"],
+    ["therm/o","heat, temperature","hypothermia","Low body temperature"]]},
+  {id:"time", lec:3, slide:"11", kind:"r", title:"Roots pertaining to time", rows:[
+    ["chron/o","time","synchronous","Occurring together"],
+    ["noct/i","night","nocturnal","Occurring at night"],
+    ["nyct/o","night, darkness","nyctophobia","Fear of night or darkness"]]},
+  {id:"chem", lec:3, slide:"13–17", kind:"r", title:"Roots pertaining to chemistry", rows:[
+    ["adip/o","fat","adiposis","Accumulation of fat in the body"],
+    ["amyl/o","starch","amylase","Enzyme that breaks down starch into sugar (amyloid = resembling starch)"],
+    ["azot/o","nitrogen compound","azoturia","Increased nitrogen compounds in urine"],
+    ["ferr/i, ferr/o","iron","ferrous / ferric","Ferrous: iron in reduced form · Ferric: iron in oxidized form"],
+    ["glyc/o","sugar, glucose","hypoglycemia","Low blood glucose"],
+    ["kal/i","potassium","hyperkalemia","Excess potassium in the blood"],
+    ["lip/o","lipid, fat","liposuction","Surgical removal of fat by suction"],
+    ["hydr/o","water, fluid","dehydrate","To lose water"],
+    ["natr/i","sodium","hyponatremia","Decrease of sodium in the blood"],
+    ["prote/o","protein","proteolysis","Dissolving of protein"],
+    ["steat/o","fatty","steatorrhea","Fatty diarrhea"],
+    ["oxy","oxygen","—","Easily recognized root"],
+    ["calci","calcium","—","Easily recognized root"]]},
+  {id:"dis", lec:3, slide:"19–20", kind:"r", title:"Roots pertaining to diseases", rows:[
+    ["carcin/o","cancer","carcinogen","Substance that produces cancer"],
+    ["lith","stone","lithiasis","Stone formation"],
+    ["onc/o","tumor","oncolysis","Destruction (lysis) of a tumor"],
+    ["path/o","disease","pathogenic","Producing disease"],
+    ["py/o","pus","pyorrhea","Discharge (-rrhea) of pus"],
+    ["pyr/o","fever, fire","pyretic","Pertaining to fever"],
+    ["scler/o","hard","sclerosis","Hardening of tissue"],
+    ["tox/o","poison, toxin","toxic","Poisonous, damaging"]]},
+  // ---------- L3 PREFIXES ----------
+  {id:"num", lec:3, slide:"23–30", kind:"p", title:"Prefixes pertaining to numbers", rows:[
+    ["prim/i","first","primigravida","Woman pregnant (gravid) for the first time"],
+    ["mon/o","one","monoclonal","A cell colony (clone) arising from a single cell"],
+    ["uni","one","unicellular","Organism composed of a single cell"],
+    ["di","two, twice","diplegia","Double paralysis"],
+    ["diplo","double","diplopia","Double vision"],
+    ["bi","two, twice","bicuspid","Having two points (cusps) — e.g. bicuspid aortic valve"],
+    ["hemi","half, one side","hemithorax","One side of the chest (thorax)"],
+    ["semi","half, partial","semilunar","Resembling a half moon"],
+    ["tri","three","triad","Group of three"],
+    ["quadr/i","four","quadrant","One fourth of an area"],
+    ["penta","five","pentanoic","An acid with 5 carbons"],
+    ["multi","many","multiple","Consisting of many parts"],
+    ["poly","many, much","polymorphic","Having many shapes (morph/o)"]]},
+  {id:"numchart", lec:3, slide:"23", kind:"p", title:"Number prefixes in pharmaceutical terms (chart)", rows:[
+    ["mono-","one","monotherapy","monoclonal antibody, monosaccharide"],
+    ["di-","two","dicarboxylic acid","dibasic, diphenhydramine"],
+    ["tri-","three","tricyclic antidepressant","triiodothyronine (T3), triglyceride"],
+    ["tetra-","four","tetracycline","tetramethyl, tetrahydrate"],
+    ["penta-","five","pentamidine","pentose, pentapeptide"],
+    ["hexa-","six","hexachlorophene","hexose, hexamethonium"],
+    ["hepta-","seven","heptavalent","heptanoic acid, heptahydrate"],
+    ["octa-","eight","octanol","octapeptide, octahydrate"],
+    ["nona-","nine","nonavalent","nonapeptide, nonanoic acid"],
+    ["deca-","ten","decamethonium","decanoic acid, decapeptide"]]},
+  {id:"size", lec:3, slide:"32–35", kind:"p", title:"Prefixes pertaining to size and comparison", rows:[
+    ["eu","true, good, easy, normal","euthanasia","Easy or painless death"],
+    ["hetero","other, different, unequal","heterosexual","Pertaining to the opposite sex"],
+    ["homo, homeo","same, unchanging","homothermic","Maintaining the body temperature"],
+    ["iso","same, equal","isograft","Graft between two genetically identical individuals"],
+    ["macro","large, abnormally large","macroscopic","Visible with the naked eye (without a microscope)"],
+    ["mega, megalo","large, abnormally large","megabladder","Permanent enlargement of the bladder"],
+    ["micro","small","microsurgery","Surgery of extremely small structures under the microscope"],
+    ["neo","new","neonate","Newborn infant (first 28 days after birth)"],
+    ["normo","normal","normovolemia","Normal blood volume"],
+    ["ortho","straight, upright","orthosis","Appliance/device used to correct or prevent deformities"],
+    ["pseudo","false","pseudocyesis","False pregnancy (also pseudoparalysis = false paralysis)"],
+    ["re","again, back","reflux","Backward or return flow (reflux esophagitis)"]]},
+  {id:"color", lec:3, slide:"36–37", kind:"p", title:"Prefixes pertaining to color", rows:[
+    ["cyan/o","blue","cyanosis","Bluish discoloration of the skin due to lack of oxygen"],
+    ["erythr/o","red","erythrocyte","Red blood cell"],
+    ["leuk/o","white, colorless","leukoplakia","White patches in the mouth"],
+    ["melan/o","black, dark","melanin","The dark pigment that colors the hair and skin"],
+    ["xanth/o","yellow","xanthoma","Yellow raised area on the skin"],
+    ["icter/o","yellow","icterus index","Index denoting blood concentration of bilirubin"],
+    ["polio, glauc/o","grey","polioencephalitis","Inflammation of the grey matter of the brain"],
+    ["verd/o","green","verdoglobin","Green compounds derived from hemoglobin"]]},
+  {id:"dir", lec:3, slide:"38–41", kind:"p", title:"Prefixes pertaining to direction", rows:[
+    ["ab","away from","abduct","To move away from the midline"],
+    ["ad","toward, near","adhesion","An attachment of parts"],
+    ["dia","through","dialysis","Separation (-lysis) by passage through a membrane"],
+    ["per","through","percutaneous","Through the skin"],
+    ["trans","through","transfusion","Introduction of blood or blood components into the blood stream"],
+    ["ex/o","away from, outside","excise","To cut out"],
+    ["endo","in, within","endoscope","Device for viewing the inside of a cavity or organ"]]},
+  {id:"pos", lec:3, slide:"40", kind:"p", title:"Prefixes pertaining to position", rows:[
+    ["dextro","right","dextrocardia","Location of the heart in the right side of the chest (rare)"],
+    ["levo","left","levorotation","Rotation towards the left"],
+    ["sinistro","left","sinistrad","Towards the left"],
+    ["ecto","out, outside","ectopic","Outside the normal position (ectopic pregnancy: outside the uterus)"]]},
+  // ---------- L4 PREFIXES ----------
+  {id:"tpos", lec:4, slide:"4", kind:"p", title:"Prefixes pertaining to time and/or position", rows:[
+    ["ante-","before","antenatal","Before birth"],
+    ["pre-","before, in front of","predisposing","Leading to a condition such as a disease (predisposing factors)"],
+    ["pro-","before, in front of","prophylaxis","Prevention of disease"],
+    ["post-","after, behind","postoperative","After a surgical operation"]]},
+  {id:"pdis", lec:4, slide:"5", kind:"p", title:"Prefixes pertaining to disease", rows:[
+    ["brady-","slow","bradycardia","Slow heart rate"],
+    ["tachy-","rapid","tachypnea","Rapid breathing"],
+    ["dys-","abnormal, painful, difficult","dysfunction","Abnormal function"],
+    ["mal-","bad","malnutrition","Poor nutrition"],
+    ["pachy-","thick","pachyderma","Thickness of the skin"],
+    ["xero-","dry","xerosis","Dryness of the skin or membranes"]]},
+  {id:"deg", lec:4, slide:"6", kind:"p", title:"Prefixes pertaining to degree", rows:[
+    ["hyper-","over, excess, abnormally high, increased","hypertension","High blood pressure"],
+    ["hypo-","under, below, abnormally low, decreased","hypoventilation","Lower amount of air entering lungs"],
+    ["olig/o-","few, deficiency of","oligospermia / oliguria","Low number of sperm in the semen / Low urine output"],
+    ["pan-","all","panplegia","Total paralysis"],
+    ["super-","above, excess","superinfection","Second infection"]]},
+  {id:"neg", lec:4, slide:"7–8", kind:"p", title:"Negative prefixes", rows:[
+    ["dis-","down, removal, separation","disinfectant","To remove infectious organisms"],
+    ["in-, im-","not","incontinence / imbalance","Lack of control over excretion / Not being in balance"],
+    ["un-","not","unconscious","Not responsive or aware or awake"],
+    ["a-, an-","not","analgesia","Pain killer"],
+    ["anti-","against","antibiotics","Anti-hypertensive (Concor), anti-protozoal (Flagyl), anti-viral (Acyclovir), antibiotics (Augmentin)"]]},
+  // ---------- L4 SUFFIXES ----------
+  {id:"spec", lec:4, slide:"10", kind:"s", title:"Suffixes pertaining to specialties", rows:[
+    ["-logy","study of (field)","physiology","Study of function in a living organism"],
+    ["-iatrics","field of medicine","pediatrics","Study of treatment of children diseases"],
+    ["-iatry","field of medicine","psychiatry","Study of treatment of mental illness"],
+    ["-ist","specialist (person)","dentist","Specialist in study and treatment of the teeth and mouth"],
+    ["-ian, -ician","specialist (person)","physician","Practitioner of medicines"],
+    ["-iatrist","specialist (person)","podiatrist","Specialist in study and treatment of the foot"]]},
+  {id:"cond", lec:4, slide:"11", kind:"s", title:"Suffixes that mean “condition of”", rows:[
+    ["-ia","condition of","insomnia","Inability to sleep"],
+    ["-iasis","condition of","amebiasis","Infection with ameba (parasites)"],
+    ["-ism","condition of","alcoholism","Chronic dependence or addiction to alcohol"],
+    ["-osis","condition of","neurosis","Abnormal condition of the neurons"],
+    ["-y","condition of","atony","Lack of muscle tone"]]},
+  {id:"sdis", lec:4, slide:"13–14", kind:"s", title:"Suffixes pertaining to disease", rows:[
+    ["-algia","pain","gastralgia","Pain in the stomach"],
+    ["-dynia, -dysnia","pain","cephalodynia","Pain in the head (headache)"],
+    ["-cele","hernia","cystocele","Hernia of the urinary bladder (cyst/o)"],
+    ["-clasis, -clasia","breaking","karyoclasis / cytoclasis","Breaking of a cell nucleus / destruction of a cell"],
+    ["-itis","inflammation","colitis","Inflammation of the colon"],
+    ["-megaly","enlargement","hepatomegaly","Enlargement of the liver (hepat/o)"],
+    ["-oma","tumor","lipoma","Fatty tumor (lip = fat)"],
+    ["-pathy","any disease of","neuropathy","Any disease of the nervous system"],
+    ["-rrhage, -rrhagia","bursting, profuse flow","hemorrhage","Profuse flow of blood (hemor = blood)"],
+    ["-rrhea","flow, discharge","diarrhea","Frequent passage of watery stool (diar = through)"],
+    ["-rrhexis","rupture","amniorrhexis","Rupture of the amniotic sac (bag of waters)"],
+    ["-schisis","fissure, splitting","retinoschisis","Splitting of the retina of the eye"]]},
+  // ---------- L5 SUFFIXES ----------
+  {id:"diag", lec:5, slide:"3", kind:"s", title:"Diagnostic suffixes (-graph, -scope …)", rows:[
+    ["-graph","instrument for recording data","cardiograph","Instrument used to record the electrical signal from the heart"],
+    ["-graphy","recording data","radiography / roentgenography","Obtaining pictures with roentgen rays (X-rays)"],
+    ["-gram","a record of data","sonogram","Record obtained by ultrasonography"],
+    ["-meter","instrument for measuring","spirometer","Instrument for measuring ventilation and breathing"],
+    ["-metry","measurement","optometry","Measurement of vision (opt/o) for glasses"],
+    ["-scope","instrument for viewing or examining","cystoscope","Endoscope used to examine the urinary bladder"],
+    ["-scopy","examination","laparoscopy","Examination of the abdomen through the abdominal wall (lapar/o)"]]},
+  {id:"small", lec:5, slide:"4", kind:"s", title:"Suffixes that mean “small”", rows:[
+    ["-cle","small","ventricle","Small belly or pouch — a cavity"],
+    ["-ole","small","bronchiole","Small airway"],
+    ["-ula","small","macula","Small spot"],
+    ["-ule","small","pustule","Small pimple"]]},
+  {id:"surg", lec:5, slide:"5–6", kind:"s", title:"Suffixes pertaining to surgery", rows:[
+    ["-centesis","puncture, tap","celiocentesis","Puncture of the abdomen"],
+    ["-ectomy","excision, surgical removal","tonsillectomy","Excision of the tonsils (tonsill/o)"],
+    ["-desis","binding, fusion","pleurodesis","Binding the pleural membranes (around the lungs)"],
+    ["-pexy","surgical fixation","uteropexy","Surgical fixation of the uterus (uter/o)"],
+    ["-plasty","plastic repair, reconstruction","septoplasty","Plastic repair of the nasal septum (partition)"],
+    ["-rrhaphy","surgical repair, suture","herniorrhaphy","Surgical repair of the hernia (herni/o)"],
+    ["-stomy","surgical creation of an opening","colostomy","Creation of an opening into the colon"],
+    ["-tome","instrument for incision (cutting)","dermatome","Instrument for cutting the skin"],
+    ["-tomy","incision, cutting","laparotomy","Surgical incision of the abdominal wall"],
+    ["-tripsy","crushing","lithotripsy","Crushing of a stone"]]},
+  {id:"adj", lec:5, slide:"8", kind:"s", title:"Adjective suffixes", rows:[
+    ["-ac","pertaining to","cardiac","Pertaining to the heart"],
+    ["-al","pertaining to","skeletal","Pertaining to the skeleton"],
+    ["-ar","pertaining to","muscular","Pertaining to the muscles"],
+    ["-ary","pertaining to","urinary","Pertaining to the urine"],
+    ["-ic","pertaining to","pelvic","Pertaining to the pelvis"],
+    ["-ical","pertaining to","surgical","Pertaining to surgery"],
+    ["-ile","pertaining to","febrile","Pertaining to fever"],
+    ["-ous","pertaining to","venous","Pertaining to a vein"],
+    ["-ive","pertaining to","effective","Pertaining to having an intended effect"],
+    ["-form","similar to, like","epileptiform","Like or resembling epilepsy"],
+    ["-oid","similar to, like","mucoid","Like or resembling mucus"]]}
+];
+
+// Word-structure analysis items (training-sheet style). t: p=prefix r=root v=combining vowel s=suffix
+const ANALYSIS = [
+  {term:"Carcinogen", lec:1, slide:"13", parts:[["r","carcin","cancer"],["v","o",""],["s","gen","producing"]], def:"Substance that promotes the formation of cancer"},
+  {term:"Pericarditis", lec:1, slide:"14", parts:[["p","peri","around"],["r","card","heart"],["s","itis","inflammation"]], def:"Inflammation around the heart"},
+  {term:"Lipemia", lec:1, slide:"15", parts:[["r","lip","fat"],["s","emia","blood condition"]], def:"A condition of fat in blood"},
+  {term:"Hyperlipemia", lec:1, slide:"19", parts:[["p","hyper","excessive"],["r","lip","fat"],["s","emia","blood condition"]], def:"A condition of excessive fat in blood"},
+  {term:"Cardiac", lec:1, slide:"20", parts:[["r","cardi","heart"],["s","ac","pertaining to"]], def:"Pertaining to heart"},
+  {term:"Hyperlipoproteinemia", lec:2, slide:"7", parts:[["p","hyper","excessive"],["r","lip","fat"],["v","o",""],["r","protein","protein"],["s","emia","blood condition"]], def:"A condition of excessive fat and protein in blood"},
+  {term:"Electrocardiogram", lec:2, slide:"10", parts:[["r","electr","electric"],["v","o",""],["r","cardi","heart"],["v","o",""],["s","gram","record"]], def:"Electrical record of the heart"},
+  {term:"Vasectomy", lec:2, slide:"13", parts:[["r","vas","vessel"],["s","ectomy","excision"]], def:"Excision of a vessel"},
+  {term:"Carditis", lec:2, slide:"14", parts:[["r","card(i)","heart"],["s","itis","inflammation"]], def:"Inflammation of heart (final i of root dropped)"},
+  {term:"Parenteral", lec:2, slide:"15", parts:[["p","par(a)","alongside of"],["r","enter","intestine"],["s","al","pertaining to"]], def:"Pertaining to alongside of the intestine (final a of prefix dropped)"},
+  {term:"Cardioesophageal", lec:2, slide:"16", parts:[["r","cardi","heart"],["v","o",""],["r","esophag","esophagus"],["s","eal","pertaining to"]], def:"Pertaining to heart and esophagus"},
+  {term:"Hypothermia", lec:2, slide:"24 · L3 s9", parts:[["p","hypo","under, below"],["r","therm","heat, temperature"],["s","ia","condition of"]], def:"Low body temperature"},
+  {term:"Oncolysis", lec:2, slide:"24 · L3 s19", parts:[["r","onc","tumor"],["v","o",""],["s","lysis","destruction"]], def:"Destruction (lysis) of a tumor"},
+  {term:"Primigravida", lec:2, slide:"24 · L3 s25", parts:[["p","primi","first"],["r","gravid","pregnant"],["s","a",""]], def:"Woman pregnant for the first time"},
+  {term:"Megabladder", lec:2, slide:"24 · L3 s33", parts:[["p","mega","large, abnormally large"],["r","bladder","bladder"]], def:"Permanent enlargement of the bladder"},
+  {term:"Bradycardia", lec:4, slide:"5", parts:[["p","brady","slow"],["r","card","heart"],["s","ia","condition of"]], def:"Slow heart rate"},
+  {term:"Tachypnea", lec:4, slide:"5", parts:[["p","tachy","rapid"],["s","pnea","breathing"]], def:"Rapid breathing"},
+  {term:"Hepatomegaly", lec:4, slide:"13", parts:[["r","hepat","liver"],["v","o",""],["s","megaly","enlargement"]], def:"Enlargement of the liver"},
+  {term:"Gastralgia", lec:4, slide:"13", parts:[["r","gastr","stomach"],["s","algia","pain"]], def:"Pain in the stomach"},
+  {term:"Cystocele", lec:4, slide:"13", parts:[["r","cyst","urinary bladder"],["v","o",""],["s","cele","hernia"]], def:"Hernia of the urinary bladder"},
+  {term:"Lipoma", lec:4, slide:"14", parts:[["r","lip","fat"],["s","oma","tumor"]], def:"Fatty tumor"},
+  {term:"Neuropathy", lec:4, slide:"14", parts:[["r","neur","nerve"],["v","o",""],["s","pathy","any disease of"]], def:"Any disease of the nervous system"},
+  {term:"Hemorrhage", lec:4, slide:"14", parts:[["r","hemor","blood"],["s","rrhage","bursting, profuse flow"]], def:"Profuse flow of blood"},
+  {term:"Amniorrhexis", lec:4, slide:"14", parts:[["r","amnio","amniotic sac"],["s","rrhexis","rupture"]], def:"Rupture of the amniotic sac (bag of waters)"},
+  {term:"Retinoschisis", lec:4, slide:"14", parts:[["r","retino","retina"],["s","schisis","splitting"]], def:"Splitting of the retina of the eye"},
+  {term:"Hyponatremia", lec:3, slide:"16", parts:[["p","hypo","under, decreased"],["r","natr","sodium"],["s","emia","blood condition"]], def:"Decrease of sodium in the blood"},
+  {term:"Hyperkalemia", lec:3, slide:"15", parts:[["p","hyper","excess"],["r","kal","potassium"],["s","emia","blood condition"]], def:"Excess potassium in the blood"},
+  {term:"Steatorrhea", lec:3, slide:"16", parts:[["r","steat","fatty"],["v","o",""],["s","rrhea","flow, discharge"]], def:"Fatty diarrhea"},
+  {term:"Pyorrhea", lec:3, slide:"20", parts:[["r","py","pus"],["v","o",""],["s","rrhea","discharge"]], def:"Discharge of pus"},
+  {term:"Tonsillectomy", lec:5, slide:"5", parts:[["r","tonsill","tonsils"],["s","ectomy","excision"]], def:"Excision of the tonsils"},
+  {term:"Colostomy", lec:5, slide:"6", parts:[["r","col","colon"],["v","o",""],["s","stomy","surgical creation of an opening"]], def:"Creation of an opening into the colon"},
+  {term:"Laparotomy", lec:5, slide:"6", parts:[["r","lapar","abdomen"],["v","o",""],["s","tomy","incision"]], def:"Surgical incision of the abdominal wall"},
+  {term:"Lithotripsy", lec:5, slide:"6", parts:[["r","lith","stone"],["v","o",""],["s","tripsy","crushing"]], def:"Crushing of a stone"},
+  {term:"Herniorrhaphy", lec:5, slide:"5", parts:[["r","herni","hernia"],["v","o",""],["s","rrhaphy","surgical repair, suture"]], def:"Surgical repair of the hernia"},
+  {term:"Uteropexy", lec:5, slide:"5", parts:[["r","uter","uterus"],["v","o",""],["s","pexy","surgical fixation"]], def:"Surgical fixation of the uterus"},
+  {term:"Laparoscopy", lec:5, slide:"3", parts:[["r","lapar","abdomen"],["v","o",""],["s","scopy","examination"]], def:"Examination of the abdomen through the abdominal wall"},
+  {term:"Optometry", lec:5, slide:"3", parts:[["r","opt","vision"],["v","o",""],["s","metry","measurement"]], def:"Measurement of vision for glasses"},
+  {term:"Dextrocardia", lec:3, slide:"40", parts:[["p","dextro","right"],["r","card","heart"],["s","ia","condition of"]], def:"Location of the heart in the right side of the chest"},
+  {term:"Percutaneous", lec:3, slide:"39", parts:[["p","per","through"],["r","cutane","skin"],["s","ous","pertaining to"]], def:"Through the skin"},
+  {term:"Endoscope", lec:3, slide:"41", parts:[["p","endo","in, within"],["s","scope","instrument for viewing"]], def:"Device for viewing the inside of a cavity or organ"},
+  {term:"Polioencephalitis", lec:3, slide:"37", parts:[["p","polio","grey"],["r","encephal","brain"],["s","itis","inflammation"]], def:"Inflammation of the grey matter of the brain"},
+  {term:"Diplopia", lec:3, slide:"26", parts:[["p","diplo","double"],["s","opia","vision"]], def:"Double vision"},
+  {term:"Hemithorax", lec:3, slide:"29", parts:[["p","hemi","half, one side"],["r","thorax","chest"]], def:"One side of the chest"},
+  {term:"Normovolemia", lec:3, slide:"34", parts:[["p","normo","normal"],["r","vol","volume"],["s","emia","blood condition"]], def:"Normal blood volume"},
+  {term:"Azoturia", lec:3, slide:"13", parts:[["r","azot","nitrogen compound"],["s","uria","urine condition"]], def:"Increased nitrogen compounds in urine"},
+  {term:"Oliguria", lec:4, slide:"6", parts:[["p","olig","few, deficiency"],["s","uria","urine condition"]], def:"Low urine output (slide spells it Oligouria)"}
+];
+
+const PLURALS = [ // lec 2 s20–23
+  ["-a","-ae","vertebra","vertebrae","bone of the spine",["vertebras","vertebri","vertebrina"]],
+  ["-en","-ina","lumen","lumina","central opening",["lumens","lumena","lumices"]],
+  ["-ex, -ix","-ices","index","indices","indicator",["indexa","indexes","indi"]],
+  ["-is","-es","diagnosis","diagnoses","identification of diseases",["diagnosises","diagnosa","diagnosae"]],
+  ["-nx (anx, inx, ynx)","-nges","phalanx","phalanges","bone of finger or toe",["phalanxes","phalanxa","phalanices"]],
+  ["-on","-a","ganglion","ganglia","mass of nerve tissue",["ganglions","ganglii","ganglies"]],
+  ["-um","-a","ovum","ova","egg",["ovi","ovae","ovums"]],
+  ["-us","-i","fungus","fungi","mold",["funga","fungae","fungices"]]
+];
+
+const PRON = [ // lec 2 s18–19
+  ["ch","k","chemical"],["c (before a, o, u)","k","cavity, colon, cure"],["c (before e, i)","s","cephalic, cirrhosis"],
+  ["dys","dis","dystrophy"],["eu","u","euphoria"],["gn","n","gnathic"],["ph","f","pharmacy"],["pn","n","pneumonia"],
+  ["ps","s","pseudo"],["pt","t","ptosis"],["rh","r","rheumatic"],["x","z","xenon"]
+];
+
+const RULES = [ // lec 2 s9–16
+  {n:"1", rule:"A combining vowel is used to join root to root, and root to any suffix beginning with a consonant.", ex:"electr/o/cardi/o/gram", s:"10"},
+  {n:"2", rule:"A combining vowel is NOT used before a suffix that begins with a vowel.", ex:"vas + ectomy → vasectomy", s:"12–13"},
+  {n:"3", rule:"If the root ends in a vowel and the suffix begins with the same vowel, drop the final vowel from the root and use no combining vowel.", ex:"cardi + itis → carditis", s:"14"},
+  {n:"4", rule:"When a prefix ends in a vowel and the root begins with a vowel, drop the final vowel from the prefix.", ex:"para + enter + al → parenteral", s:"15"},
+  {n:"4b", rule:"Most often a combining vowel is inserted between two roots even when the second root begins with a vowel.", ex:"cardi/o/esophag/eal", s:"16"}
+];
+
+// Curated concept questions. type: mcq | tf (with correction)
+const CONCEPTS = [
+  {lec:1,s:"9",type:"mcq",q:"Medical terminology is best defined as:",o:["The language used to precisely describe the human body, its components, processes, conditions affecting it and procedures performed upon it","The study of drug names and their classification only","A list of Latin abbreviations used on prescriptions","The language used to describe diseases only"],a:0,ex:"التعريف بتاع السلايد: language بتوصف الجسم كله: components, processes, conditions, procedures. مش الأمراض بس."},
+  {lec:1,s:"10",type:"mcq",q:"Most medical terms come from:",o:["Latin or Greek","English and French","German","Arabic"],a:0,ex:"معظمها Latin أو Greek، وفي لغات تانية زي English وGerman وFrench بس قليلة."},
+  {lec:1,s:"11",type:"mcq",q:"The word part that is the core of the word is the:",o:["Root","Prefix","Suffix","Combining vowel"],a:0,ex:"الـ Root هو الـ core. الـ prefix في الأول والـ suffix في الآخر وبيعدلوا المعنى."},
+  {lec:1,s:"11",type:"mcq",q:"A word part attached to the END of a word root to modify its meaning is a:",o:["Suffix","Prefix","Root","Combining vowel"],a:0,ex:"Suffix = attached to the end. Prefix = attached to the beginning."},
+  {lec:1,s:"12",type:"mcq",q:"The combining vowel is usually:",o:["o or i","a or e","u or y","e or i"],a:0,ex:"الـ combining vowel غالبًا o (الأشهر) وبعدها i."},
+  {lec:1,s:"8",type:"mcq",q:"In Medical Terminology, the final written exam is worth:",o:["75 marks","50 marks","25 marks","20 marks"],a:0,ex:"Class activity 25 (Mid-term/Quiz 20 + Research 5) + Final written 75. والـ attendance عليها bonus 2–3."},
+  {lec:1,s:"4–5",type:"mcq",q:"Competency is a set of characteristics including:",o:["Knowledge, skills and attitude","Knowledge, grades and attendance","Skills, salary and experience","Attitude only"],a:0,ex:"Competency = knowledge + skills + attitude (والسلايد التاني زاد behaviors) — Mrowicki 1986."},
+  {lec:2,s:"6",type:"mcq",q:"The SECOND most common combining vowel is:",o:["i","o","a","e"],a:0,ex:"o الأشهر، i التاني."},
+  {lec:2,s:"6",type:"mcq",q:"Combining vowels are used to join:",o:["Root to root and root to suffix","Prefix to root only","Prefix to suffix","Suffix to suffix"],a:0,ex:"بيربطوا root بـ root، وroot بـ suffix. مش بيتحطوا بين الـ prefix والـ root."},
+  {lec:2,s:"8",type:"mcq",q:"Why do we use combining vowels?",o:["To ease pronunciation","To change the meaning of the root","To make the word plural","To indicate the organ"],a:0,ex:"عشان النطق يبقى أسهل. ووجودهم مش إجباري."},
+  {lec:2,s:"13",type:"mcq",q:"Which term shows that NO combining vowel is used before a suffix beginning with a vowel?",o:["Vasectomy","Electrocardiogram","Cardioesophageal","Hyperlipoproteinemia"],a:0,ex:"vas + ectomy: الـ suffix بيبدأ بـ e (vowel) فمفيش o. القاعدة رقم 2."},
+  {lec:2,s:"14",type:"mcq",q:"cardi + itis = carditis. Which rule explains it?",o:["Root ends in a vowel and suffix begins with the same vowel → drop the root's final vowel","A combining vowel joins root to root","Drop the final vowel of the prefix","Combining vowel is inserted between two roots"],a:0,ex:"cardi بتخلص بـ i والـ itis بتبدأ بـ i، فبنشيل i بتاعة الـ root. القاعدة رقم 3."},
+  {lec:2,s:"15",type:"mcq",q:"para + enter + al becomes:",o:["Parenteral","Paraenteral","Paroenteral","Parentral"],a:0,ex:"الـ prefix بيخلص بـ vowel (a) والـ root بيبدأ بـ vowel (e)، فبنشيل a بتاعة الـ prefix. القاعدة رقم 4."},
+  {lec:2,s:"16",type:"mcq",q:"cardi + esophag + eal is correctly written as:",o:["Cardioesophageal","Cardiesophageal","Cardesophageal","Cardiesophagoeal"],a:0,ex:"بين two roots غالبًا بنحط combining vowel حتى لو الـ root التاني بيبدأ بـ vowel."},
+  {lec:2,s:"10",type:"mcq",q:"electr + cardi + gram is correctly written as:",o:["Electrocardiogram","Electrcardiogram","Electrocardigram","Electrocardiagram"],a:0,ex:"o بين الـ roots، وo قبل gram لأنها بتبدأ بـ consonant. القاعدة رقم 1."},
+  {lec:2,s:"17",type:"mcq",q:"All medical terms are built from the:",o:["Root","Prefix","Suffix","Combining vowel"],a:0,ex:"All medical terms build from the root، والـ prefixes والـ suffixes بتتضاف عليه."},
+  {lec:2,s:"20",type:"mcq",q:"“Lumen” means:",o:["Central opening","Bone of the spine","Mass of nerve tissue","Indicator"],a:0,ex:"Lumen = central opening، والجمع lumina."},
+  {lec:4,s:"9",type:"mcq",q:"Which is NOT one of the suffix categories in the slides?",o:["Degree","Specialties","Surgery","Adjective suffix"],a:0,ex:"فئات الـ suffix: specialties, condition of, disease, small, surgery, adjective. أما degree فهي فئة من فئات الـ prefix."},
+  {lec:4,s:"3",type:"mcq",q:"Prefix categories in Lecture 4 are: time and position, disease, degree and:",o:["Negative prefix","Surgery","Small","Specialties"],a:0,ex:"Prefix: time & position, disease, degree, negative."},
+  {lec:4,s:"12",type:"mcq",q:"Disease is defined in the slides as a condition in which the body is harmed because:",o:["An organ or part is unable to work as it usually does","A microbe enters the body","The temperature rises","A tumor forms"],a:0,ex:"A condition of a person, animal or plant in which its body is harmed because an organ or part is unable to work as it usually does."},
+  {lec:4,s:"10",type:"mcq",q:"Which suffix indicates a PERSON (specialist) not a field?",o:["-iatrist","-iatry","-iatrics","-logy"],a:0,ex:"Person: -ist, -ian/-ician, -iatrist. Field: -logy, -iatrics, -iatry."},
+  {lec:5,s:"7",type:"mcq",q:"An adjective suffix is:",o:["A suffix added to a root word to form an adjective","A suffix that means small","A suffix used in surgery","A prefix that means not"],a:0,ex:"Adjective suffix = suffix added to a root to form an adjective."},
+  {lec:5,s:"8",type:"mcq",q:"Which pair of suffixes means “similar to / resembling”?",o:["-form and -oid","-ac and -al","-ile and -ous","-ic and -ical"],a:0,ex:"-form (epileptiform) و-oid (mucoid) = similar to. الباقي pertaining to."},
+  {lec:2,s:"Ex", type:"mcq",q:"Electrocardiograph is the ____, electrocardiogram is the ____:",o:["machine (instrument) / record","record / machine","examination / instrument","record / process of recording"],a:0,ex:"-graph = instrument، -gram = record، -graphy = process of recording (electrocardiography)."},
+  // TRUE / FALSE with correction
+  {lec:2,s:"6",type:"tf",q:"“o” is the second most common combining vowel.",a:false,fix:"“o” is the MOST common; “i” is the second."},
+  {lec:2,s:"8",type:"tf",q:"All medical terms must contain a combining vowel.",a:false,fix:"Not all medical terms have combining vowels (not mandatory)."},
+  {lec:2,s:"12",type:"tf",q:"A combining vowel is used before a suffix that begins with a vowel.",a:false,fix:"It is NOT used before a suffix beginning with a vowel (vasectomy)."},
+  {lec:2,s:"15",type:"tf",q:"When a prefix ends in a vowel and the root begins with a vowel, the final vowel of the ROOT is dropped.",a:false,fix:"The final vowel of the PREFIX is dropped (parenteral)."},
+  {lec:2,s:"8",type:"tf",q:"Combining vowels are used to ease pronunciation.",a:true},
+  {lec:1,s:"11",type:"tf",q:"The suffix is the core of the medical word.",a:false,fix:"The ROOT is the core of the word."},
+  {lec:4,s:"6",type:"tf",q:"Hypo- means over, excess, abnormally high.",a:false,fix:"Hypo- = under, below, abnormally low. Hyper- = over, excess."},
+  {lec:4,s:"14",type:"tf",q:"-rrhexis means profuse flow.",a:false,fix:"-rrhexis = rupture. -rrhage = bursting, profuse flow."},
+  {lec:5,s:"6",type:"tf",q:"-tome means incision.",a:false,fix:"-tome = instrument for incision (cutting). -tomy = incision."},
+  {lec:5,s:"3",type:"tf",q:"-graph means a record of data.",a:false,fix:"-graph = instrument for recording data. -gram = a record of data."},
+  {lec:5,s:"3",type:"tf",q:"-scopy means instrument for viewing.",a:false,fix:"-scopy = examination. -scope = instrument for viewing or examining."},
+  {lec:3,s:"40",type:"tf",q:"Levo and sinistro both mean left.",a:true},
+  {lec:3,s:"40",type:"tf",q:"Ecto means inside.",a:false,fix:"Ecto = out, outside (ectopic pregnancy). Endo = in, within."},
+  {lec:3,s:"33",type:"tf",q:"Macroscopic means visible only under a microscope.",a:false,fix:"Macroscopic = visible with the naked eye (without a microscope)."},
+  {lec:3,s:"37",type:"tf",q:"Polio- means green.",a:false,fix:"Polio = grey. Verd/o = green."},
+  {lec:4,s:"5",type:"tf",q:"Bradycardia means rapid heart rate.",a:false,fix:"Bradycardia = slow heart rate. Tachy- = rapid."},
+  {lec:3,s:"34",type:"tf",q:"Neonate is an infant in the first 28 days after birth.",a:true},
+  {lec:3,s:"32",type:"tf",q:"Isograft is a graft between two genetically identical individuals.",a:true},
+  {lec:4,s:"6",type:"tf",q:"Oligouria means excessive urine output.",a:false,fix:"Olig/o = few, deficiency → oliguria = low urine output."},
+  {lec:3,s:"9",type:"tf",q:"Hypothermia means high body temperature.",a:false,fix:"Hypothermia = low body temperature (hypo = below)."},
+  {lec:4,s:"6",type:"tf",q:"Superinfection means a second infection.",a:true},
+  {lec:5,s:"4",type:"tf",q:"-ole, -ula, -ule and -cle all mean small.",a:true},
+  {lec:4,s:"7",type:"tf",q:"Analgesia means pain killer; a-/an- means not.",a:true}
+];
+
+// Look-alikes (comparison tables)
+const CONFUSE = [
+  {t:"-graph · -graphy · -gram", rows:[["-graph","instrument for recording","cardiograph"],["-graphy","recording (the process)","radiography"],["-gram","a record (the result)","sonogram"]], tip:"ماكينة ← بتعمل عملية ← بتطلع ورقة: graph ← graphy ← gram (زيادة للفهم)"},
+  {t:"-meter · -metry", rows:[["-meter","instrument for measuring","spirometer"],["-metry","measurement","optometry"]], tip:"اللي بيخلص بـ y هو العملية: metry, scopy, graphy, tomy (زيادة للفهم)"},
+  {t:"-scope · -scopy", rows:[["-scope","instrument for viewing","cystoscope, endoscope"],["-scopy","examination","laparoscopy"]], tip:"scope = الأداة، scopy = الفحص نفسه"},
+  {t:"-tome · -tomy · -ectomy · -stomy", rows:[["-tome","instrument for incision","dermatome"],["-tomy","incision, cutting","laparotomy"],["-ectomy","excision (removal)","tonsillectomy"],["-stomy","surgical creation of an opening","colostomy"]], tip:"ec = out: ectomy بتشيل العضو برّه. s-tomy = فتحة (stoma) (زيادة للفهم)"},
+  {t:"-rrhage · -rrhea · -rrhexis · -rrhaphy", rows:[["-rrhage","bursting, profuse flow","hemorrhage"],["-rrhea","flow, discharge","diarrhea"],["-rrhexis","rupture","amniorrhexis"],["-rrhaphy","surgical repair, suture","herniorrhaphy"]], tip:"rrhaphy بس هي اللي surgery، الباقي disease"},
+  {t:"-pexy · -desis · -plasty", rows:[["-pexy","surgical fixation","uteropexy"],["-desis","binding, fusion","pleurodesis"],["-plasty","plastic repair","septoplasty"]], tip:""},
+  {t:"-algia · -dynia", rows:[["-algia","pain","gastralgia"],["-dynia","pain","cephalodynia"]], tip:"الاتنين = pain"},
+  {t:"Hyper · Hypo · Super · Olig/o · Pan", rows:[["hyper-","over, excess, high","hypertension"],["hypo-","under, below, low","hypoventilation"],["super-","above, excess","superinfection"],["olig/o","few, deficiency","oliguria"],["pan-","all","panplegia"]], tip:""},
+  {t:"Ante · Pre · Pro · Post", rows:[["ante-","before","antenatal"],["pre-","before, in front of","predisposing"],["pro-","before, in front of","prophylaxis"],["post-","after, behind","postoperative"]], tip:""},
+  {t:"Dia · Per · Trans (through)", rows:[["dia","through","dialysis"],["per","through","percutaneous"],["trans","through","transfusion"]], tip:"التلاتة = through"},
+  {t:"Ab · Ad · Ex/o · Endo · Ecto", rows:[["ab","away from","abduct"],["ad","toward, near","adhesion"],["ex/o","away from, outside","excise"],["endo","in, within","endoscope"],["ecto","out, outside","ectopic"]], tip:"Ab = Away، Ad = aDd (يقرّب) (زيادة للفهم)"},
+  {t:"Dextro · Levo · Sinistro", rows:[["dextro","right","dextrocardia"],["levo","left","levorotation"],["sinistro","left","sinistrad"]], tip:""},
+  {t:"Mono · Uni · Prim/i", rows:[["mon/o","one","monoclonal"],["uni","one","unicellular"],["prim/i","first","primigravida"]], tip:"prim = first مش one"},
+  {t:"Di · Diplo · Bi", rows:[["di","two, twice","diplegia"],["diplo","double","diplopia"],["bi","two, twice","bicuspid"]], tip:""},
+  {t:"Hemi · Semi", rows:[["hemi","half, one side","hemithorax"],["semi","half, partial","semilunar"]], tip:""},
+  {t:"Macro · Mega · Micro", rows:[["macro","large","macroscopic"],["mega/megalo","large, abnormally large","megabladder"],["micro","small","microsurgery"]], tip:""},
+  {t:"Homo · Iso · Hetero", rows:[["homo/homeo","same, unchanging","homothermic"],["iso","same, equal","isograft"],["hetero","other, different","heterosexual"]], tip:""},
+  {t:"Noct/i · Nyct/o · Chron/o", rows:[["noct/i","night","nocturnal"],["nyct/o","night, darkness","nyctophobia"],["chron/o","time","synchronous"]], tip:""},
+  {t:"Py/o · Pyr/o", rows:[["py/o","pus","pyorrhea"],["pyr/o","fever, fire","pyretic"]], tip:"pyR = fiRe (زيادة للفهم)"},
+  {t:"Adip/o · Lip/o · Steat/o", rows:[["adip/o","fat","adiposis"],["lip/o","lipid","liposuction, lipoma"],["steat/o","fatty","steatorrhea"]], tip:""},
+  {t:"Kal · Natr · Calci · Ferr", rows:[["kal/i","potassium","hyperkalemia"],["natr/i","sodium","hyponatremia"],["calci","calcium","—"],["ferr/o","iron","ferrous"]], tip:"K = Kalium, Na = Natrium (زيادة للفهم)"},
+  {t:"Yellow · Grey · Green", rows:[["xanth/o, icter/o","yellow","xanthoma, icterus index"],["polio, glauc/o","grey","polioencephalitis"],["verd/o","green","verdoglobin"]], tip:""},
+  {t:"Specialty: field vs person", rows:[["-logy / -iatrics / -iatry","field of study","physiology, pediatrics, psychiatry"],["-ist / -ian / -iatrist","person (specialist)","dentist, physician, podiatrist"]], tip:""}
+];
+
+if (typeof module !== "undefined") module.exports = {SECTIONS, ANALYSIS, PLURALS, PRON, RULES, CONCEPTS, CONFUSE};
+
+</script>
+<script>
+(function(){
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const store={get(k,d){try{const v=localStorage.getItem("ts_"+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem("ts_"+k,JSON.stringify(v))}catch(e){}}};
+const KIND={p:"prefix",r:"root",s:"suffix"};
+
+/* ---------- TABS ---------- */
+document.querySelectorAll("nav.tabs button").forEach(b=>b.addEventListener("click",()=>openTab(b.dataset.tab)));
+function openTab(t){document.querySelectorAll("nav.tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===t));
+  ["review","confuse","analyze","quiz"].forEach(id=>$("#"+id).hidden=id!==t);store.set("tab",t);window.scrollTo(0,0)}
+
+/* ---------- REVIEW ---------- */
+const LEC_TITLES={1:"L1 · Intro & word parts",2:"L2 · Components, rules, plurals",3:"L3 · Roots + prefixes",4:"L4 · Prefixes + suffixes",5:"L5 · Suffixes"};
+let revLec=store.get("revLec",1);
+const lc=$("#lecChips");
+[1,2,3,4,5].forEach(n=>{const b=document.createElement("button");b.className="chip";b.textContent="L"+n;b.setAttribute("aria-pressed",n===revLec);b.onclick=()=>{revLec=n;store.set("revLec",n);lc.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed",c===b));renderReview()};lc.appendChild(b)});
+const hb=$("#hideBtn");hb.onclick=()=>{const on=hb.getAttribute("aria-pressed")!=="true";hb.setAttribute("aria-pressed",on);$("#reviewBody").classList.toggle("hide-m",on)};
+$("#reviewBody").addEventListener("click",e=>{const td=e.target.closest("td.m,td.def");if(td)td.classList.toggle("show")});
+
+function secTable(sec,open){
+  const isChart=sec.id==="numchart";
+  return `<details class="sec"${open?" open":""}><summary><span class="tag ${sec.kind}">${KIND[sec.kind]}</span>${esc(sec.title)}<span class="meta">L${sec.lec} s${sec.slide}</span></summary>
+  <div class="tbl"><table><thead><tr><th>${KIND[sec.kind]}</th><th>Meaning</th><th>Example</th><th>${isChart?"More examples":"Definition"}</th></tr></thead><tbody>
+  ${sec.rows.map(r=>`<tr><td class="part ${sec.kind}">${esc(r[0])}</td><td class="m">${esc(r[1])}</td><td class="ex">${esc(r[2])}</td><td class="def">${esc(r[3])}</td></tr>`).join("")}
+  </tbody></table></div></details>`}
+
+function renderReview(){
+  let h="";
+  if(revLec===1){h+=`
+  <div class="card"><h3>Medical terminology</h3><p>The language used to <b>precisely describe the human body</b> including its components, processes, conditions affecting it, and procedures performed upon it. Used in the field of medicine and pharmacy. <span class="stat">s9</span></p>
+  <p>Most terms = <span class="tag p">prefix</span> + <span class="tag r">root / stem</span> + <span class="tag s">suffix</span>. Mostly from <b>Latin or Greek</b>; others from English, German and French. <span class="stat">s10</span></p></div>
+  <div class="card"><h3>Word parts <span class="stat">s11–12</span></h3>
+  <div class="tbl"><table><tbody>
+  <tr><td><span class="tag p">Prefix</span></td><td>Attached to the <b>beginning</b> of a word root to modify its meaning</td></tr>
+  <tr><td><span class="tag r">Root</span></td><td>The word part that is the <b>core</b> of the word</td></tr>
+  <tr><td><span class="tag s">Suffix</span></td><td>Attached to the <b>end</b> of the word root to modify its meaning</td></tr>
+  <tr><td><span class="tag v">Combining vowel</span></td><td>A word part, usually an <b>“o” or “i”</b></td></tr></tbody></table></div></div>
+  <div class="card"><h3>Slide examples <span class="stat">s13–20</span></h3>${ANALYSIS.filter(a=>a.lec===1).map(partsHTML).join("")}</div>
+  <div class="card"><h3>Grades & competency <span class="stat">s4–8</span></h3>
+  <p>Class activity / periodicals <b>25</b> = Mid-term/Quiz <b>20</b> + Research <b>5</b> · Final written <b>75</b> · Attendance & behavior: bonus 2–3.</p>
+  <p><b>Competency:</b> a set of characteristics including <b>knowledge, skills and attitude</b>, integrated within a situation in a setting; a description of the essential skills, knowledge, attitudes and behaviors required for effective performance of a real-world task (Mrowicki, 1986).</p></div>`}
+  if(revLec===2){h+=`
+  <div class="card"><h3>Combining vowels <span class="stat">s4–8</span></h3>
+  <p>When a term has more than one root, each is joined by a vowel. <b>[o]</b> is the most common, <b>[i]</b> the second most common.</p>
+  <p>They join: <b>(i) root to root · (ii) root to suffix</b>.</p>
+  <p>Why? <b>To ease pronunciation.</b> Mandatory? <b>No</b>, not all medical terms have combining vowels.</p></div>
+  <div class="card"><h3>Rules for forming & spelling <span class="stat">s9–16</span></h3><ol class="rules">
+  ${RULES.map(r=>`<li><b>${esc(r.rule)}</b><br><code>${esc(r.ex)}</code> <span class="stat">s${r.s}</span></li>`).join("")}</ol>
+  <p class="note ar" lang="ar">أول خطوة: تحفظ وتكتب الـ word components صح. التانية: تركّب الكلمة بالقواعد دي. وكل الكلمات بتتبني من الـ root (s17).</p></div>
+  <div class="card"><h3>Examples</h3>${ANALYSIS.filter(a=>a.lec===2).map(partsHTML).join("")}</div>
+  <div class="card"><h3>-graph · -gram · -graphy <span class="stat">s11</span></h3><p><b>Electrocardiograph</b> = the machine · <b>Electrocardiogram</b> = the heart-rhythm record (EKG) · <b>Electrocardiography</b> = the procedure.</p></div>
+  <div class="card"><h3>Silent letters & unusual pronunciation <span class="stat">s18–19</span></h3>
+  <div class="tbl"><table><thead><tr><th>Letter</th><th>Sounds like</th><th>Example</th></tr></thead><tbody>
+  ${PRON.map(p=>`<tr><td class="part p">${esc(p[0])}</td><td class="m">${esc(p[1])}</td><td class="ex">${esc(p[2])}</td></tr>`).join("")}</tbody></table></div></div>
+  <div class="card"><h3>Singular → plural <span class="stat">s20–23</span></h3>
+  <div class="tbl"><table><thead><tr><th>Ending</th><th>Plural ending</th><th>Singular</th><th>Plural</th></tr></thead><tbody>
+  ${PLURALS.map(p=>`<tr><td class="part s">${esc(p[0])}</td><td class="part s">${esc(p[1])}</td><td>${esc(p[2])} <span class="hint">(${esc(p[4])})</span></td><td class="m"><b>${esc(p[3])}</b></td></tr>`).join("")}</tbody></table></div>
+  <p class="note">The slide header says “Pleural”; the correct spelling is <b>Plural</b> (pleural = of the pleura).</p></div>`}
+  const secs=SECTIONS.filter(s=>s.lec===revLec);
+  if(revLec===4)h+=`<div class="card"><p><b>Prefix</b> categories: time & position · disease · degree · negative. <b>Suffix</b> = the ending part; brings an action. Suffix categories: specialties · condition of · disease · small · surgery · adjective. <span class="stat">s2–3, s9</span></p>
+  <p><b>Disease:</b> a condition of a person, animal or plant in which its body or structure is harmed because an organ or part is unable to work as it usually does. <span class="stat">s12</span></p></div>`;
+  if(revLec===5)h+=`<div class="card"><p><b>Adjective suffix:</b> a suffix added to a root word to form an adjective. -ac … -ive mean “pertaining to”; <b>-form, -oid</b> mean “similar to”. <span class="stat">s7–8</span></p></div>`;
+  h+=secs.map((s,i)=>secTable(s,i<2)).join("");
+  if(revLec===4)h+=`<p class="note">Slide spelling notes: “Reputure” → <b>Rupture</b>; “Oligouria” is usually spelled <b>Oliguria</b>. Write what your doctor accepts.</p>`;
+  if(revLec===3)h+=`<p class="note">Slide spelling notes: “Polioencephalities” → <b>Polioencephalitis</b>; “Hemi thorax” → <b>Hemithorax</b>.</p>`;
+  $("#reviewBody").innerHTML=h}
+
+function partsHTML(a){return `<div style="margin-block:8px"><b>${esc(a.term)}</b><div class="parts">${a.parts.map(p=>`<span class="wp ${p[0]}"><b>${esc(p[1])}</b><small>${esc(p[2]||"vowel")}</small></span>`).join("")}</div><div class="hint">${esc(a.def)}</div></div>`}
+
+/* ---------- CONFUSE ---------- */
+$("#confuseBody").innerHTML=CONFUSE.map(c=>`<div class="card"><h3>${esc(c.t)}</h3><div class="tbl"><table><tbody>${c.rows.map(r=>`<tr><td class="part ${r[0].startsWith("-")?"s":"p"}">${esc(r[0])}</td><td><b>${esc(r[1])}</b></td><td class="ex">${esc(r[2])}</td></tr>`).join("")}</tbody></table></div>${c.tip?`<div class="ctip ar" lang="ar">${esc(c.tip)}</div>`:""}</div>`).join("");
+
+/* ---------- ANALYZE ---------- */
+let anDeck=shuffle(ANALYSIS.map((_,i)=>i)),anI=0,anOk=0,anDone=0;
+function anShow(){if(anI>=anDeck.length){anDeck=shuffle(anDeck);anI=0}
+  const a=ANALYSIS[anDeck[anI]];$("#anTerm").textContent=a.term;$("#anAnswer").hidden=true;
+  $("#anParts").innerHTML=a.parts.map(p=>`<span class="wp ${p[0]}"><b>${esc(p[1])}</b><small>${p[0]==="v"?"combining vowel":esc(KIND[p[0]]+(p[2]?" · "+p[2]:""))}</small></span>`).join("");
+  $("#anDef").textContent=a.def;$("#anSrc").textContent="Source: L"+a.lec+" s"+a.slide;
+  $("#anReveal").hidden=false;$("#anGot").hidden=$("#anMiss").hidden=true;
+  $("#anCount").textContent=(anI+1)+" / "+anDeck.length;$("#anStat").textContent=anDone?`${anOk}/${anDone} صح`:""}
+$("#anReveal").onclick=()=>{$("#anAnswer").hidden=false;$("#anReveal").hidden=true;$("#anGot").hidden=$("#anMiss").hidden=false};
+$("#anGot").onclick=()=>{anOk++;anDone++;anI++;anShow()};
+$("#anMiss").onclick=()=>{anDone++;anDeck.splice(Math.min(anDeck.length,anI+4),0,anDeck[anI]);anI++;anShow()};
+anShow();
+
+/* ---------- QUIZ ENGINE ---------- */
+const STOP=new Set(["of","the","a","an","to","for","or","and","in","data","abnormally","surgical","instrument","condition"]);
+const toks=s=>s.toLowerCase().replace(/[^a-z ]/g," ").split(/\s+/).filter(w=>w&&!STOP.has(w));
+const overlap=(a,b)=>{const A=new Set(toks(a));return toks(b).some(w=>A.has(w))};
+const ROWS=[];SECTIONS.forEach(sec=>sec.rows.forEach((r,i)=>ROWS.push({sec,part:r[0],m:r[1],ex:r[2],def:r[3],key:sec.id+":"+i})));
+
+function pickDistractors(row,field,n){
+  const pools=[ROWS.filter(x=>x.sec===row.sec),ROWS.filter(x=>x.sec.kind===row.sec.kind&&x.sec.lec===row.sec.lec),ROWS.filter(x=>x.sec.kind===row.sec.kind)];
+  const out=[],seen=new Set([row[field].toLowerCase()]);
+  for(const pool of pools){for(const x of shuffle(pool)){if(out.length>=n)break;if(x===row)continue;
+    const v=x[field];if(!v||v==="—"||seen.has(v.toLowerCase()))continue;
+    if(overlap(x.m,row.m))continue; out.push(v);seen.add(v.toLowerCase())}}
+  return out}
+function mcq(q,correct,distr,extra){const opts=shuffle([correct,...distr]);return Object.assign({q,opts,a:opts.indexOf(correct)},extra)}
+
+function rowQ(row,type){
+  const src=`L${row.sec.lec} s${row.sec.slide} · ${row.sec.title}`;
+  const kn=KIND[row.sec.kind];
+  if(type==="pm"){return mcq(`What does the ${kn} <span class="mono">${esc(row.part)}</span> mean?${row.ex!=="—"?` <span class="hint">(e.g. ${esc(row.ex)})</span>`:""}`,row.m,pickDistractors(row,"m",3),{kind:"Meaning",src,key:row.key,type,
+    ex:`<span class="mono">${esc(row.part)}</span> = <b>${esc(row.m)}</b>${row.ex!=="—"?` · ${esc(row.ex)}: ${esc(row.def)}`:""}`})}
+  if(type==="mp"){return mcq(`Which ${kn} means “${esc(row.m)}”?`,row.part,pickDistractors(row,"part",3),{kind:"Build the term",src,key:row.key,type,mono:true,
+    ex:`“${esc(row.m)}” = <span class="mono">${esc(row.part)}</span>${row.ex!=="—"?` (${esc(row.ex)})`:""}`})}
+  if(type==="dt"){return mcq(`“${esc(row.def)}” is the definition of:`,row.ex,pickDistractors(row,"ex",3),{kind:"Define",src,key:row.key,type,
+    ex:`<b>${esc(row.ex)}</b>: الـ ${kn} <span class="mono">${esc(row.part)}</span> = ${esc(row.m)}`})}}
+
+function pluralQ(p,i){const opts=shuffle([p[3],...p[5]]);return {kind:"Plural",q:`The plural of <b>${esc(p[2])}</b> (${esc(p[4])}) is:`,opts,a:opts.indexOf(p[3]),src:"L2 s20–23",key:"pl:"+i,type:"pl",
+  ex:`الكلمات اللي بتخلص بـ <span class="mono">${esc(p[0])}</span> جمعها <span class="mono">${esc(p[1])}</span>: ${esc(p[2])} → <b>${esc(p[3])}</b>`}}
+function pronQ(p,i){const sounds=["k","s","dis","u","n","f","t","r","z"];const d=shuffle(sounds.filter(s=>s!==p[1])).slice(0,3);const opts=shuffle([p[1],...d]);
+  return {kind:"Pronunciation",q:`In <b>${esc(p[2].split(",")[0])}</b>, the letters “${esc(p[0])}” are pronounced as:`,opts,a:opts.indexOf(p[1]),src:"L2 s18–19",key:"pr:"+i,type:"pr",ex:`“${esc(p[0])}” تتنطق <b>${esc(p[1])}</b> زي ${esc(p[2])}`}}
+function conceptQ(c,i){const key="c:"+i;
+  if(c.type==="tf")return {kind:"True / False",tf:true,q:esc(c.q),opts:["True","False"],a:c.a?0:1,src:"L"+c.lec+" s"+c.s,key,type:"tf",ex:c.a?"العبارة صح.":`<b>Correction:</b> ${esc(c.fix)}`};
+  const idx=shuffle(c.o.map((_,j)=>j));return {kind:"Concept",q:esc(c.q),opts:idx.map(j=>c.o[j]),a:idx.indexOf(c.a),src:"L"+c.lec+" s"+c.s,key,type:"cm",ex:esc(c.ex),ar:true}}
+function analysisQ(a,i){const others=shuffle(ANALYSIS.filter(x=>x!==a)).slice(0,3).map(x=>x.def);const opts=shuffle([a.def,...others]);
+  return {kind:"Analyze",q:`Analyze <b>${esc(a.term)}</b>. It means:`,opts,a:opts.indexOf(a.def),src:"L"+a.lec+" s"+a.slide,key:"an:"+i,type:"an",
+    ex:a.parts.map(p=>`<span class="tag ${p[0]}">${esc(p[1])}</span>${p[2]?" "+esc(p[2]):""}`).join(" + ")}}
+
+function buildPool(lecs){const pool=[];const L=new Set(lecs);
+  ROWS.forEach(r=>{if(!L.has(r.sec.lec))return;const types=r.ex==="—"||r.sec.id==="numchart"?["pm","mp"]:["pm","mp","dt"];pool.push(()=>rowQ(r,types[Math.random()*types.length|0]))});
+  CONCEPTS.forEach((c,i)=>{if(L.has(c.lec))pool.push(()=>conceptQ(c,i))});
+  ANALYSIS.forEach((a,i)=>{if(L.has(a.lec)&&Math.random()<.5)pool.push(()=>analysisQ(a,i))});
+  if(L.has(2)){PLURALS.forEach((p,i)=>pool.push(()=>pluralQ(p,i)));PRON.forEach((p,i)=>{if(Math.random()<.6)pool.push(()=>pronQ(p,i))})}
+  return pool}
+function rebuild(key){const [t,id]=key.split(/:(.+)/);
+  if(t==="pl")return pluralQ(PLURALS[+id],+id); if(t==="pr")return pronQ(PRON[+id],+id);
+  if(t==="c")return conceptQ(CONCEPTS[+id],+id); if(t==="an")return analysisQ(ANALYSIS[+id],+id);
+  const r=ROWS.find(x=>x.key===key);return r?rowQ(r,["pm","mp"][Math.random()*2|0]):null}
+function variant(q){ // re-ask in a new form
+  if(q.type==="pm"||q.type==="mp"||q.type==="dt"){const r=ROWS.find(x=>x.key===q.key);const t=q.type==="pm"?"mp":"pm";return rowQ(r,t)}
+  return rebuild(q.key)}
+
+/* quiz setup UI */
+let qLecs=store.get("qLecs",[1,2,3,4,5]),qN=store.get("qN",25);
+const qlc=$("#qLecChips");
+[1,2,3,4,5].forEach(n=>{const b=document.createElement("button");b.className="chip";b.textContent="L"+n;b.setAttribute("aria-pressed",qLecs.includes(n));
+  b.onclick=()=>{qLecs=qLecs.includes(n)?qLecs.filter(x=>x!==n):[...qLecs,n].sort();if(!qLecs.length)qLecs=[n];store.set("qLecs",qLecs);qlc.querySelectorAll(".chip").forEach((c,i)=>c.setAttribute("aria-pressed",qLecs.includes(i+1)))};qlc.appendChild(b)});
+const qcc=$("#qCountChips");
+[15,25,40,60].forEach(n=>{const b=document.createElement("button");b.className="chip";b.textContent=n+" سؤال";b.setAttribute("aria-pressed",n===qN);b.onclick=()=>{qN=n;store.set("qN",n);qcc.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed",c===b))};qcc.appendChild(b)});
+let oldMissed=store.get("missed",[]);
+function refreshMissedBtn(){$("#qMissedOnly").hidden=!oldMissed.length;$("#qMissedOnly").textContent=`راجع غلطاتي القديمة (${oldMissed.length})`}
+refreshMissedBtn();
+
+let Q=[],qi=0,score=0,answered=0,missed=[],phase="main";
+$("#qStart").onclick=()=>{const pool=shuffle(buildPool(qLecs));Q=pool.slice(0,qN).map(f=>f()).filter(Boolean);startRun("main")};
+$("#qMissedOnly").onclick=()=>{Q=shuffle(oldMissed).map(rebuild).filter(Boolean);startRun("main")};
+function startRun(ph){phase=ph;qi=0;if(ph==="main"){score=0;answered=0;missed=[]}
+  $("#qSetup").hidden=true;$("#qEnd").hidden=true;$("#qRun").hidden=false;showQ()}
+function showQ(){const q=Q[qi];
+  $("#qPos").textContent=(phase==="redo"?"إعادة · ":"")+(qi+1)+" / "+Q.length;
+  $("#qScore").textContent=phase==="main"?`${score} ✓`:"";
+  $("#qBar").style.width=(qi/Q.length*100)+"%";
+  $("#qKind").textContent=q.kind;$("#qText").innerHTML=q.q;
+  $("#qOpts").innerHTML=q.opts.map((o,i)=>`<button class="opt" data-i="${i}"${q.mono?' style="font-family:var(--f-mono)"':""}>${esc(o)}</button>`).join("");
+  $("#qFb").innerHTML="";$("#qNext").hidden=true}
+$("#qOpts").addEventListener("click",e=>{const b=e.target.closest(".opt");if(!b||b.disabled)return;
+  const q=Q[qi],i=+b.dataset.i,ok=i===q.a;
+  $("#qOpts").querySelectorAll(".opt").forEach((x,j)=>{x.disabled=true;if(j===q.a)x.classList.add("right")});
+  if(!ok)b.classList.add("wrong");
+  if(phase==="main"){answered++;if(ok)score++;else missed.push(q)}
+  if(ok)oldMissed=oldMissed.filter(k=>k!==q.key);else if(!oldMissed.includes(q.key))oldMissed.push(q.key);
+  store.set("missed",oldMissed);
+  let trap="";
+  if(!ok&&!q.tf&&q.type!=="cm")trap=`<br><span class="ar" lang="ar">اللي اخترته “${esc(q.opts[i])}” ده معنى/جزء تاني، ركّز على الفرق.</span>`;
+  $("#qFb").innerHTML=`<div class="fb ${ok?"ok":"bad"}"><b>${ok?"✅ صح":"❌ غلط"}</b> — <span dir="auto">${q.ex}</span>${trap}<span class="src">${esc(q.src)}</span></div>`;
+  $("#qNext").hidden=false;$("#qNext").textContent=qi+1<Q.length?"التالي":"النتيجة";$("#qNext").focus()});
+$("#qNext").onclick=()=>{qi++;if(qi<Q.length)showQ();else endRun()};
+function endRun(){$("#qRun").hidden=true;const e=$("#qEnd");e.hidden=false;refreshMissedBtn();
+  if(phase==="redo"){e.innerHTML=`<h3>خلصت الإعادة 👏</h3><p class="ar" lang="ar">الأسئلة اللي لسه بتغلط فيها اتسجلت في “غلطاتي القديمة”، ارجعلها قبل الامتحان.</p><div class="row"><button class="btn primary" id="qAgain">كويز جديد</button></div>`;
+    $("#qAgain").onclick=backToSetup;return}
+  const pct=Math.round(score/answered*100);
+  const bySec={};missed.forEach(q=>{bySec[q.src]=(bySec[q.src]||0)+1});
+  const weak=Object.entries(bySec).sort((a,b)=>b[1]-a[1]);
+  e.innerHTML=`<div class="eyebrow">Result</div><div class="score">${score}/${answered}</div><p class="stat">${pct}% · ${pct>=85?"جاهز، راجع غلطاتك بس":pct>=65?"كويس، ركّز على الأماكن اللي تحت":"محتاج تراجع الجداول دي تاني قبل ما تعيد"}</p>
+  ${weak.length?`<h3>نقط ضعفك</h3><ul class="weak">${weak.map(([s,n])=>`<li><span class="mono">${esc(s)}</span> — ${n} غلط</li>`).join("")}</ul>`:"<p>ولا غلطة 🔥</p>"}
+  <div class="row">${missed.length?`<button class="btn primary" id="qRedo">أعد اللي غلطت فيه بصيغة تانية (${missed.length})</button>`:""}<button class="btn" id="qAgain">كويز جديد</button></div>`;
+  if(missed.length)$("#qRedo").onclick=()=>{Q=shuffle(missed.map(variant).filter(Boolean));startRun("redo")};
+  $("#qAgain").onclick=backToSetup}
+function backToSetup(){$("#qEnd").hidden=true;$("#qSetup").hidden=false}
+
+renderReview();
+const t0=location.hash.replace("#","");openTab(["review","confuse","analyze","quiz"].includes(t0)?t0:store.get("tab","review"));
+})();
+</script>
