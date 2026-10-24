@@ -3,7 +3,8 @@ const { test, expect } = require("@playwright/test");
 const path = require("path");
 const fs = require("fs");
 
-const URL = "file:///" + path.resolve(__dirname, "..", "site", "index.html").replace(/\\/g, "/");
+// BASE_URL=https://terminology-med-revision.vercel.app npx playwright test  -> run against the live site
+const URL = process.env.BASE_URL || "file:///" + path.resolve(__dirname, "..", "site", "index.html").replace(/\\/g, "/");
 const SHOTS = path.join(__dirname, "shots");
 fs.mkdirSync(SHOTS, { recursive: true });
 const CONTENT = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "content", "content.json"), "utf8"));
@@ -20,7 +21,7 @@ async function noOverflow(page, where) {
 }
 
 /* ---------- layout: viewports x themes ---------- */
-const VIEWPORTS = [[360, 740], [400, 850], [1280, 800]];
+const VIEWPORTS = [[360, 740], [390, 844], [400, 850], [1280, 800]];
 for (const scheme of ["light", "dark"]) {
   for (const [w, h] of VIEWPORTS) {
     test(`layout ${w}x${h} ${scheme}`, async ({ page }) => {
@@ -220,4 +221,72 @@ test("every content.json row appears in Study", async ({ page }) => {
     }
   }
   expect(total).toBe(CONTENT.sections.reduce((a, s) => a + s.rows.length, 0));
+});
+
+/* ---------- regressions (bugs fixed 2026-10-24) ---------- */
+const KIND_OF = {};
+CONTENT.sections.forEach(s => s.rows.forEach(r => [r.part, ...r.alts].forEach(f => { KIND_OF[f.toLowerCase()] = KIND_OF[f.toLowerCase()] || s.kind; })));
+
+test("look-alikes: every part has the colour of its own table (prefixes were green)", async ({ page }) => {
+  await page.goto(URL + "#study");
+  await page.click('button[data-sub="look"]');
+  const cells = await page.$$eval("td.c-part", tds => tds.map(td => ({ text: td.innerText.replace(/\s+/g, ""), cls: [...td.querySelectorAll(".hl")].map(e => e.className) })));
+  const rows = CONTENT.lookalikes.flatMap(g => g.rows);
+  expect(cells.length).toBe(rows.length);
+  const bad = [];
+  rows.forEach((r, i) => {
+    const want = KIND_OF[r.part.split(/,\s*/)[0].toLowerCase()];
+    if (want && cells[i].cls.some(c => !c.includes("k-vowel") && !c.includes("k-" + want))) bad.push(`${r.part}: want ${want}, got ${cells[i].cls}`);
+  });
+  expect(bad, bad.join("\n")).toEqual([]);
+  // spot checks that were wrong before
+  for (const p of ["dia", "hyper-", "mon/o", "pre-"]) expect(KIND_OF[p]).toBe("prefix");
+});
+
+test("practice: lengths 15/25/40/60; exact count, or a clear message when fewer exist", async ({ page }) => {
+  await page.goto(URL + "#practice");
+  await expect(page.locator("button[data-n]")).toHaveText(["15", "25", "40", "60"]);
+  const pick = async (lec, n) => {
+    await page.evaluate(() => { window.MT.PR.run = null; }); await page.click('.tab[data-tab="home"]'); await page.click('.tab[data-tab="practice"]');
+    await page.click('button[data-mode="mixed"]');
+    for (const x of [1, 2, 3, 4, 5]) { const on = await page.getAttribute(`button.chip[data-lec="${x}"]`, "aria-pressed") === "true"; if (on !== (x === lec)) await page.click(`button.chip[data-lec="${x}"]`); }
+    await page.click(`button[data-n="${n}"]`);
+    await page.click('[data-a="start"]');
+  };
+  await pick(3, 15);
+  await expect(page.locator("#qnum")).toHaveText("1 / 15");
+  await expect(page.locator("#shortMsg")).toHaveCount(0);
+  await pick(1, 60); // L1 has fewer than 60
+  const have = await page.evaluate(() => window.MT.makeQuiz("mixed", [1], 9999).length);
+  expect(have).toBeLessThan(60);
+  await expect(page.locator("#qnum")).toHaveText(`1 / ${have}`);
+  await expect(page.locator("#shortMsg")).toContainText(`Only ${have} questions`);
+  // an old saved length (10) maps to a valid option
+  await page.evaluate(() => localStorage.setItem("mt:prCfg", JSON.stringify({ mode: "mixed", lecs: [3], n: 10 })));
+  await page.reload();
+  await expect(page.locator('button[data-n="15"]')).toHaveAttribute("aria-pressed", "true");
+});
+
+test("flashcards: a swipe right after flipping (mid-animation) still grades", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto(URL + "#cards");
+  await page.click("#fcStart");
+  const flip = page.locator("#flip");
+  for (let i = 0; i < 5; i++) {
+    const before = await page.evaluate(() => ({ ...window.MT.FC.s.stats }));
+    await page.keyboard.press("Space");
+    const b = await flip.boundingBox(); // no wait for the 0.45 s rotation
+    await page.mouse.move(b.x + b.width - 40, b.y + 120); await page.mouse.down();
+    await page.mouse.move(b.x + b.width / 2, b.y + 120, { steps: 4 }); await page.mouse.move(b.x + 30, b.y + 120, { steps: 4 }); await page.mouse.up();
+    await expect.poll(() => page.evaluate(() => window.MT.FC.s.stats.again)).toBe(before.again + 1);
+  }
+});
+
+test("share: live SITE_URL, no placeholder, link is a 44px tap target", async ({ page }) => {
+  await page.goto(URL + "#about");
+  await page.click('.tab[data-tab="about"]');
+  expect(await page.content()).not.toContain("example.com");
+  await expect(page.locator("#siteLink")).toHaveAttribute("href", "https://terminology-med-revision.vercel.app");
+  const b = await page.locator("#siteLink").boundingBox();
+  expect(b.height).toBeGreaterThanOrEqual(44);
 });

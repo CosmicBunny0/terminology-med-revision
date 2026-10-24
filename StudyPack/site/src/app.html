@@ -183,6 +183,7 @@ details.sec>summary h3{font-size:1.05rem;flex:1}
 .fb{margin-top:14px;padding:14px;border-radius:12px;border:1px solid var(--line);background:var(--surface)}
 .fb.ok{border-color:var(--ok);background:var(--ok-bg)}
 .fb.no{border-color:var(--bad);background:var(--bad-bg)}
+.notice{margin:8px 0 0;padding:8px 12px;border-radius:10px;background:var(--v-bg);color:var(--ink)}
 .fb .verdict{font-weight:600}
 .diff{font-family:var(--display);font-weight:700;font-size:1.4rem;letter-spacing:.02em}
 .diff mark{background:var(--bad);color:var(--surface);border-radius:4px;padding:0 1px}
@@ -403,7 +404,7 @@ function renderStudy() {
   let body = "";
   if (ST.sub === "lec") body = `<p class="muted small" style="margin:12px 0 0">${esc(lt.title)}, ${esc(lt.doctor)}</p>` + lectureHTML(ST.lec);
   if (ST.sub === "look") body = DATA.lookalikes.map(x => `<div class="card"><h3><span>${esc(x.title)}</span><span class="ref">${esc(x.slide)}</span></h3>
-      <div class="tblwrap"><table class="tbl"><tbody>${x.rows.map(r => `<tr><td class="c-part">${partHTML(r.part, r.part.startsWith("-") ? "suffix" : "root")}</td><td><span class="m" tabindex="0" role="button">${esc(r.meaning)}</span></td><td class="c-ex">${esc(r.example)}</td></tr>`).join("")}</tbody></table></div>
+      <div class="tblwrap"><table class="tbl"><tbody>${x.rows.map(r => `<tr><td class="c-part">${partHTML(r.part, kindOfPart(r.part))}</td><td><span class="m" tabindex="0" role="button">${esc(r.meaning)}</span></td><td class="c-ex">${esc(r.example)}</td></tr>`).join("")}</tbody></table></div>
       <div class="arnote" lang="ar" dir="rtl">${bidi(x.tip)}${x.tipIsExtra ? ' <span class="extra">(زيادة للفهم)</span>' : ""}</div></div>`).join("");
   if (ST.sub === "trap") body = `<p class="small muted" style="margin-top:12px">Write the left column. The right column shows the usual mistakes. “Say” is a pronunciation guide (extra).</p>
     <div class="tblwrap"><table class="tbl"><thead><tr><th>Correct (slide)</th><th>Not</th><th>Say (extra)</th><th>Slide</th></tr></thead><tbody>${DATA.spellingTraps.map(t => `<tr><td class="c-part"><span class="part">${esc(t.word)}</span></td><td class="small">${esc(t.trap)}</td><td class="c-ex small muted">${esc(t.say)}</td><td class="c-def">${ref(t.lec, t.slide)}</td></tr>`).join("")}</tbody></table></div>`;
@@ -494,13 +495,14 @@ function renderCards() {
       <div class="row" style="margin-top:14px"><button class="btn" data-a="restart">Restart</button><button class="btn" data-a="decks">Change deck</button></div>`;
     const flip = $("#flip"), inner = $(".flip-in", flip);
     let x0 = null, dx = 0;
-    inner.addEventListener("pointerdown", e => { x0 = e.clientX; dx = 0; try { inner.setPointerCapture(e.pointerId); } catch (_) {} }); /* keep the swipe even if the finger leaves the card */
-    inner.addEventListener("pointermove", e => { if (x0 == null || !FC.flipped) return; dx = e.clientX - x0; flip.classList.toggle("drag-r", dx > 40); flip.classList.toggle("drag-l", dx < -40); });
-    inner.addEventListener("pointerup", e => {
+    /* pointer events on the outer box: it is never rotated, so its hit area stays put during the flip animation */
+    flip.addEventListener("pointerdown", e => { x0 = e.clientX; dx = 0; try { flip.setPointerCapture(e.pointerId); } catch (_) {} }); /* keep the swipe even if the finger leaves the card */
+    flip.addEventListener("pointermove", e => { if (x0 == null || !FC.flipped) return; dx = e.clientX - x0; flip.classList.toggle("drag-r", dx > 40); flip.classList.toggle("drag-l", dx < -40); });
+    flip.addEventListener("pointerup", e => {
       if (x0 == null) return; dx = e.clientX - x0; x0 = null; flip.classList.remove("drag-r", "drag-l");
       if (FC.flipped && dx > 60) FC.grade("got"); else if (FC.flipped && dx < -60) FC.grade("again"); else if (Math.abs(dx) < 12) FC.flip();
     });
-    inner.addEventListener("pointercancel", () => { x0 = null; flip.classList.remove("drag-r", "drag-l"); });
+    flip.addEventListener("pointercancel", () => { x0 = null; flip.classList.remove("drag-r", "drag-l"); });
     inner.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); FC.flip(); } });
     v.onclick = e => {
       const g = e.target.closest("[data-g]"); if (g) return FC.grade(g.dataset.g);
@@ -572,6 +574,8 @@ function refOf(q) {
   if (q.type === "build" || q.type === "analyze") { const t = DATA.analysis.find(a => q.explain_ar.startsWith(a.term + " ") || q.explain_ar.startsWith(a.term + ":")); return t && `an:${t.term}`; }
   return null;
 }
+/* colour of a bare part (look-alikes): the kind of its own table row; hyphen position only as a fallback */
+const kindOfPart = p => { p = String(p).split(/,\s*/)[0]; const id = (PART_IDX[p.toLowerCase()] || [])[0]; return id ? CARD[id].kind : /^-/.test(p) ? "suffix" : /-$/.test(p) ? "prefix" : "root"; };
 const meaningOfPart = (p, kind) => { const ids = PART_IDX[String(p).toLowerCase()] || []; const id = ids.find(i => CARD[i].kind === kind) || ids[0]; return id ? CARD[id].meaning : null; };
 const QS = DATA.questions.filter(q => q.type !== "analyze").map(q => ({ ...q, ref: refOf(q) }));
 /* generated: typed "write the part that means X" — accepts every part of the same kind with the identical meaning */
@@ -596,6 +600,8 @@ function genMeaningMcq(c) {
     explain_ar: `${c.part} = ${c.meaning} (مثال: ${c.example.split(/\s*·\s*/)[0]}).` };
 }
 const ROWCARDS = CARDS.filter(c => c.part && !["numchart", "anti", "easy"].includes(c.secId));
+const LENS = [15, 25, 40, 60];
+const fitLen = n => LENS.find(x => x >= n) || LENS[LENS.length - 1]; /* old saved lengths (10/20) map to the next option */
 function pool(mode, lecs) {
   const inL = q => lecs.includes(q.lec);
   if (mode === "mcq") return QS.filter(q => q.type === "mcq" && inL(q));
@@ -636,15 +642,16 @@ function retryForm(q) {
   return q.type === "mcq" ? { ...q, options: shuffle(q.options) } : q;
 }
 const PR = {
-  cfg: store.get("prCfg", { mode: "mixed", lecs: LECS.slice(), n: 10 }),
+  cfg: (c => ({ ...c, n: fitLen(c.n) }))(store.get("prCfg", { mode: "mixed", lecs: LECS.slice(), n: 15 })),
   run: null,
   start(cfg) {
     this.cfg = { mode: cfg.mode, lecs: cfg.lecs.slice(), n: cfg.n }; store.set("prCfg", this.cfg);
     const label = `${({ mixed: "Mixed", spell: "Spelling", mcq: "MCQ", analyze: "Analyse" })[cfg.mode]}, ${cfg.lecs.map(l => "L" + l).join(" ")}, ${cfg.n}`;
     store.set("last", { type: "practice", ...this.cfg, label });
-    this.begin(cfg.qs || makeQuiz(cfg.mode, cfg.lecs, cfg.n), label);
+    const qs = cfg.qs || makeQuiz(cfg.mode, cfg.lecs, cfg.n);
+    this.begin(qs, label, qs.length < cfg.n ? `Only ${qs.length} questions exist for this selection (you chose ${cfg.n}). Add lectures or switch to Mixed for more.` : "");
   },
-  begin(qs, label) { this.run = { qs, i: 0, results: [], answered: false, label, revealed: false }; renderPractice(); },
+  begin(qs, label, notice = "") { this.run = { qs, i: 0, results: [], answered: false, label, revealed: false, notice }; renderPractice(); },
   record(q, ok) {
     const r = this.run; r.results.push({ q, ok }); r.answered = true;
     const h = store.get("qhist", {}); const x = h[q.lec] = h[q.lec] || { right: 0, total: 0 }; x.total++; if (ok) x.right++; store.set("qhist", h);
@@ -669,7 +676,7 @@ function renderPractice() {
       : `<p class="muted">On paper, fill the training-sheet row: prefix / root / suffix, the meaning of each part, then the medical meaning.</p><button class="btn primary block" data-a="reveal">Show the breakdown</button>`;
     else body = `<form class="typed" id="tform" autocomplete="off"><input id="tin" aria-label="Your answer" autocapitalize="off" autocorrect="off" spellcheck="false" ${R.answered ? "disabled" : ""}><button class="btn primary" ${R.answered ? "disabled" : ""}>Check</button></form>`;
     const qtitle = q.type === "self" ? `<div class="an-word" style="font-size:clamp(1.8rem,8vw,2.6rem)">${esc(q.a.term)}</div>` : `<div class="qtext">${esc(q.q)}</div>`;
-    v.innerHTML = `<div class="row" style="justify-content:space-between"><span class="small muted">${esc(R.label)}</span><span class="small" id="qnum">${R.i + 1} / ${R.qs.length}</span></div>
+    v.innerHTML = `<div class="row" style="justify-content:space-between"><span class="small muted">${esc(R.label)}</span><span class="small" id="qnum">${R.i + 1} / ${R.qs.length}</span></div>${R.notice && R.i === 0 ? `<p class="small notice" id="shortMsg" role="status">${esc(R.notice)}</p>` : ""}
       <div class="prog" aria-hidden="true"><i style="width:${Math.round(100 * R.i / R.qs.length)}%"></i></div>
       ${qtitle}${body}<div id="fbox"></div>
       <div class="row" style="margin-top:14px"><button class="btn primary ${R.answered ? "" : "hidden"}" id="next" data-a="next">${R.i + 1 < R.qs.length ? "Next question" : "See results"}</button><button class="btn" data-a="quit">End quiz</button></div>`;
@@ -732,7 +739,7 @@ function renderPractice() {
     <div class="field"><span class="lab">Mode</span><div class="seg" role="group" aria-label="Mode">${[["mixed", "Mixed"], ["spell", "Spelling"], ["mcq", "MCQ"], ["analyze", "Analyse"]].map(([k, t]) => `<button data-mode="${k}" aria-pressed="${cfg.mode === k}">${t}</button>`).join("")}</div>
       <p class="small muted">${({ mixed: "MCQ, true/false and typed answers.", spell: "Typed answers only. Spelling counts in the written exam.", mcq: "Multiple choice only.", analyze: "Training-sheet drill: split the term on paper, then check it and grade yourself." })[cfg.mode]}</p></div>
     <div class="field"><span class="lab">Lectures</span><div class="row">${LECS.map(l => `<button class="chip" data-lec="${l}" aria-pressed="${cfg.lecs.includes(l)}">L${l}</button>`).join("")}</div></div>
-    <div class="field"><span class="lab">Length</span><div class="seg" role="group" aria-label="Length">${[10, 20, 40].map(n => `<button data-n="${n}" aria-pressed="${cfg.n === n}">${n}</button>`).join("")}</div></div>
+    <div class="field"><span class="lab">Length</span><div class="seg" role="group" aria-label="Length">${LENS.map(n => `<button data-n="${n}" aria-pressed="${cfg.n === n}">${n}</button>`).join("")}</div></div>
     <button class="btn primary block" data-a="start" ${cfg.lecs.length ? "" : "disabled"}>Start</button>`;
   v.onclick = e => {
     const b = e.target.closest("button"); if (!b) return;
@@ -752,7 +759,7 @@ function renderAbout() {
   v.innerHTML = `<h2>Download &amp; about</h2>
     <div class="stack" style="margin-top:14px">
       <a class="btn primary block" href="${PDF_HREF}">Download the PDF study pack</a>
-      <div class="panel"><h3>Share this site</h3><div class="row" style="margin-top:10px;align-items:flex-start;gap:16px"><div class="qr" id="qr" aria-label="QR code for ${esc(SITE_URL)}"></div><p class="small" style="overflow-wrap:anywhere;flex:1;min-width:150px"><a href="${esc(SITE_URL)}">${esc(SITE_URL)}</a><br>Scan it, or send the link to the batch group.</p></div></div>
+      <div class="panel"><h3>Share this site</h3><div class="row" style="margin-top:10px;align-items:flex-start;gap:16px"><div class="qr" id="qr" aria-label="QR code for ${esc(SITE_URL)}"></div><p class="small" style="overflow-wrap:anywhere;flex:1;min-width:150px"><a href="${esc(SITE_URL)}" id="siteLink" style="display:inline-block;min-height:44px;padding:12px 0">${esc(SITE_URL)}</a><br>Scan it, or send the link to the batch group.</p></div></div>
       <div class="panel"><h3>Source</h3><p>${esc(M.disclaimer.replace(/\.$/, ""))}. Every item shows its lecture and slide number.</p>
         <ul>${M.lectures.map(l => `<li>L${l.n}: ${esc(l.doctor)}</li>`).join("")}</ul><p class="small muted">${esc(M.credit)}</p></div>
       <div class="panel"><h3>Found a mistake?</h3><p>Send the lecture and slide number (for example “L3 slide 14”) and what is wrong to Mohammed Aymen in the batch WhatsApp group. Corrections go into the next version.</p></div>
