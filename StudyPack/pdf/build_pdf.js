@@ -9,6 +9,7 @@ const here = __dirname;
 const C = JSON.parse(fs.readFileSync(path.join(here, "..", "content", "content.json"), "utf8"));
 const M = C.meta;
 const OUT_HTML = path.join(here, "print.html");
+const SITE_URL = process.env.SITE_URL || "https://terminology-med-revision.vercel.app";
 const OUT_PDF = path.join(here, "MedTerm-L1-L5-Study-Pack.pdf");
 
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -64,6 +65,7 @@ const cover = `
   </div>
   <div class="credit">
     <div><b>${esc(M.disclaimer)}</b></div>
+    <div>Flashcards & quizzes: <b>${esc(SITE_URL)}</b></div>
     <div class="muted">${esc(M.credit)} · page refs like “L3 p24” point to the PDF page of that lecture · items marked (extra) / (زيادة للفهم) are not on the slides.</div>
   </div>
 </section>`;
@@ -160,7 +162,7 @@ const qnum = new Map();
 [...QM, ...QT, ...QS].forEach(q => qnum.set(q.id, ++n));
 const test = `
 <section class="part-open"><div class="pn">6</div><h2>Self-test <span>${n} questions · answers at the end</span></h2></section>
-<p class="small muted">More (${C.questions.length} questions, typed answers, flashcards) on the website. The more interactive way to drill.</p>
+<p class="small muted">More (${C.questions.length} questions, typed answers, flashcards) on the website: <b>${esc(SITE_URL)}</b></p>
 <h4 class="tt">A. Choose the correct answer</h4>
 <ol class="qs">${QM.map(q => `<li value="${qnum.get(q.id)}">${esc(q.q)} ${ref(q.lec, q.slide)}<div class="opts">${q.options.map((o, i) => `<span>${L[i]}) ${esc(o)}</span>`).join("")}</div></li>`).join("")}</ol>
 <h4 class="tt">B. True or false — correct the false ones</h4>
@@ -271,7 +273,7 @@ fs.writeFileSync(OUT_HTML, html);
   const missing = fonts.filter(f => !f[1]).map(f => f[0]);
   if (missing.length) { console.error("FONTS NOT LOADED (no network?):", missing.join(", ")); process.exitCode = 1; }
   const foot = `<div style="font:7.5px Arial,sans-serif;color:#55646F;width:100%;padding:0 13mm;display:flex;justify-content:space-between">
-    <span>Medical Terminology L1–L5 · ${esc(M.disclaimer)}</span><span><span class="pageNumber"></span> / <span class="totalPages"></span></span></div>`;
+    <span>Medical Terminology L1–L5 · ${esc(M.disclaimer)} · ${esc(SITE_URL.replace(/^https:\/\//, ""))}</span><span><span class="pageNumber"></span> / <span class="totalPages"></span></span></div>`;
   await page.pdf({ path: OUT_PDF, format: "A4", printBackground: true, preferCSSPageSize: true, displayHeaderFooter: true,
     headerTemplate: "<span></span>", footerTemplate: foot });
   await browser.close();

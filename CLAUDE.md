@@ -54,7 +54,7 @@ and LOOK at each image. Never conclude "not in the slides" from text extraction 
 - PAGE_SIZE: A4 portrait   (alternative: phone format 108×192 mm)
 - EXPLANATION_LANG: English content + short Egyptian-Arabic notes
 - HOSTING: Vercel   (alternatives: GitHub Pages · claude.ai artifact public link)
-- SITE_URL: fill after Prompt 4; until then use https://example.com/medterm as placeholder
+- SITE_URL: https://terminology-med-revision.vercel.app
 
 ## Output folder
 Everything goes in `StudyPack\` inside this folder:

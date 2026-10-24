@@ -3,7 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const SITE_URL = process.env.SITE_URL || "https://example.com/medterm"; // placeholder until hosting (CLAUDE.md)
+const SITE_URL = process.env.SITE_URL || "https://terminology-med-revision.vercel.app"; // live Vercel URL (CLAUDE.md)
 const here = __dirname;
 const content = JSON.parse(fs.readFileSync(path.join(here, "..", "content", "content.json"), "utf8"));
 const tpl = fs.readFileSync(path.join(here, "src", "app.html"), "utf8");
