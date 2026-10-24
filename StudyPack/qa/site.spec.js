@@ -290,3 +290,14 @@ test("share: live SITE_URL, no placeholder, link is a 44px tap target", async ({
   const b = await page.locator("#siteLink").boundingBox();
   expect(b.height).toBeGreaterThanOrEqual(44);
 });
+
+test("no failed network requests (favicon.ico was a 404 on Vercel)", async ({ page }) => {
+  const bad = [];
+  page.on("response", r => { if (r.status() >= 400) bad.push(r.status() + " " + r.url()); });
+  page.on("requestfailed", r => { if (!/fonts\.(googleapis|gstatic)\.com/.test(r.url())) bad.push("failed " + r.url()); }); // font CDN timeouts = local network, not the site
+  await page.goto(URL + "#home", { waitUntil: "networkidle" });
+  for (const tab of ["study", "cards", "practice", "about"]) await page.click(`.tab[data-tab="${tab}"]`);
+  await page.waitForLoadState("networkidle");
+  await expect(page.locator('link[rel="icon"]')).toHaveCount(1);
+  expect(bad, bad.join("\n")).toEqual([]);
+});
