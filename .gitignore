@@ -1,5 +1,6 @@
 *.pdf
 !StudyPack/pdf/MedTerm-L1-L5-Study-Pack.pdf
+!StudyPack/site/MedTerm_L1-L5_StudyPack.pdf
 StudyPack/content/pages/
 node_modules/
 test-results/

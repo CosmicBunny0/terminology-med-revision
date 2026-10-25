@@ -18,4 +18,7 @@ const out = tpl.replace("/*__CONTENT__*/null", () => json).replace("/*__SITE_URL
 // fail the build on a JS syntax error instead of shipping a blank page
 for (const m of out.matchAll(/<script>([\s\S]*?)<\/script>/g)) new Function(m[1]);
 fs.writeFileSync(path.join(here, "index.html"), out);
+// the "Download PDF" button (PDF_HREF in src/app.html) links next to index.html; Vercel serves this folder only
+const PDF_HREF = /const PDF_HREF = "\.\/([^"]+)"/.exec(tpl)[1];
+fs.copyFileSync(path.join(here, "..", "pdf", "MedTerm-L1-L5-Study-Pack.pdf"), path.join(here, PDF_HREF));
 console.log(`index.html written: ${(out.length / 1024).toFixed(0)} KB, ${content.questions.length} questions`);
