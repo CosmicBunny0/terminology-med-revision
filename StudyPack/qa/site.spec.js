@@ -301,3 +301,75 @@ test("no failed network requests (favicon.ico was a 404 on Vercel)", async ({ pa
   await expect(page.locator('link[rel="icon"]')).toHaveCount(1);
   expect(bad, bad.join("\n")).toEqual([]);
 });
+
+/* ---------- Phase 3: exam levels at phone width ---------- */
+for (const level of ["easy", "medium", "hard", "max", "mix"]) {
+  test(`level ${level}: runs end to end at 390px, ramp easy→hard, no overflow`, async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    const errs = watchErrors(page);
+    await page.goto(URL + "#practice");
+    await page.click(`button[data-mode="${level}"]`);
+    await page.click('button[data-n="25"]');
+    await page.click('[data-a="start"]');
+    const diffs = await page.evaluate(() => window.MT.PR.run.qs.map(q => q.difficulty));
+    expect(diffs.length).toBeGreaterThanOrEqual(level === "max" ? 20 : 25);
+    const order = ["easy", "medium", "hard", "max"];
+    for (let i = 1; i < diffs.length; i++) expect(order.indexOf(diffs[i])).toBeGreaterThanOrEqual(order.indexOf(diffs[i - 1]));
+    if (level !== "mix") expect(new Set(diffs)).toEqual(new Set([level]));
+    for (let i = 0; i < diffs.length; i++) {
+      await expect(page.locator("#qnum")).toContainText(`${i + 1} /`);
+      if (await page.locator(".opt").count()) await page.locator(".opt").first().click();
+      else { await page.locator("#tform input").first().fill("test"); await page.locator("#tform button").click(); }
+      await expect(page.locator("#fbox .fb")).toBeVisible();
+      await noOverflow(page, `${level} q${i + 1}`);
+      if (i === 2) await page.screenshot({ path: path.join(SHOTS, `level-${level}-390.png`), fullPage: true });
+      await page.click("#next");
+    }
+    await expect(page.locator("h2")).toContainText("Score:");
+    await noOverflow(page, `${level} results`);
+    expect(errs, errs.join("\n")).toEqual([]);
+  });
+}
+
+test("partial marks: analysis + two blanks, Arabic feedback RTL with hyphen runs isolated", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  const errs = watchErrors(page);
+  await page.goto(URL + "#practice");
+  await page.evaluate(() => {
+    const { BANK, PR } = window.MT;
+    const an = BANK.Q.find(q => q.kind === "analyze" && q.fields.filter(f => "accept_part" in f).length >= 2);
+    const t2 = BANK.Q.find(q => q.kind === "typed2");
+    PR.begin([an, t2].map(q => ({ ...q, bank: true })), "partial");
+  });
+  // analysis: first part right, everything else wrong
+  const an = await page.evaluate(() => window.MT.PR.run.qs[0]);
+  let done = false;
+  for (let i = 0; i < an.fields.length; i++) {
+    const f = an.fields[i];
+    if (!("accept_part" in f) || done) continue;
+    await page.fill(`#f${i}p`, f.accept_part[0]); await page.fill(`#f${i}m`, f.accept_meaning[0] || ""); done = true;
+  }
+  await page.locator("#tform button").click();
+  await expect(page.locator(".fb.half .marks")).toContainText(`/ ${an.fields.length} marks`);
+  await expect(page.locator(".fb .verdict")).toContainText("Partly right");
+  await expect(page.locator(".fieldres tr")).toHaveCount(an.fields.length);
+  const ar = page.locator(".fb .ar[dir=rtl]").first();
+  await expect(ar).toBeVisible();
+  await noOverflow(page, "analysis feedback");
+  await page.screenshot({ path: path.join(SHOTS, "partial-analysis-390.png"), fullPage: true });
+  await page.click("#next");
+  // two blanks: first right, second wrong
+  const t2 = await page.evaluate(() => window.MT.PR.run.qs[1]);
+  await page.fill("#b0", t2.blanks[0].answer); await page.fill("#b1", "pain");
+  await page.locator("#tform button").click();
+  await expect(page.locator(".fb .marks")).toContainText("1 / 2 marks");
+  await page.screenshot({ path: path.join(SHOTS, "partial-typed2-390.png"), fullPage: true });
+  await page.click("#next");
+  await expect(page.locator("h2")).toContainText(/Score: \d+ \/ \d+/);
+  // bidi: a leading/trailing hyphen stays inside the LTR run
+  const b = await page.evaluate(() => [window.MT.bidi("-ist في الآخر = شخص"), window.MT.bidi("hypo- يعني تحت"), window.MT.bidi('"a&b"')]);
+  expect(b[0]).toContain('<bdi dir="ltr">-ist</bdi>');
+  expect(b[1]).toContain('<bdi dir="ltr">hypo-</bdi>');
+  expect(b[2]).toContain("&amp;");
+  expect(errs, errs.join("\n")).toEqual([]);
+});

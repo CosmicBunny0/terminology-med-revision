@@ -1,4 +1,5 @@
 # Slide notes (viewed images)
+Table lines are the exact slide wording (slide spellings kept). Brackets like (ante|nat|al) record the colour split shown on the slide.
 ## L1 (Dr Shaimaa)
 p1 title. p2 course poster (doctor photos - EXCLUDE). p3 course file infographic (admin). p4 teaching plan table: L4 "Prefixes + Medical idioms" Dr Hagar 11/10; L5 Prefixes+Suffixes 18/10; L6 Suffixes 25/10. p5 course spec 9 panels (admin; ILOs A1 abbreviations, A2 divide terms into prefix root suffix...). p6 Competency definition (knowledge, skills, attitude; Mrowicki 1986) - admin/intro. p7 Arabic جدارات vs كفاءات - intro.
 p8 Grading: Class Activity/Periodicals 25 (Mid-term/Quiz=20, Research=5); Practical Exam (-) Marks; Lecture Attendance & Behavior Bonus=2 to 3 Marks; Final Written Exam=75.
@@ -49,11 +50,11 @@ p12 divider Chemistry. ROOTS - CHEMISTRY (p13-16):
 adip/o | fat | adiposis | Accumulation of fat in the body (the process)
 amyl/o | starch | amyloid; amylase | Resembling (like) starch; Enzyme breaks down starch into sugar (amylase highlighted)
 azot/o | nitrogen compound | azoturia | increased nitrogen compounds in urine (uria in red)
-ferr/i, ferr/o | Iron | Ferric; Ferrous | ferric: containing iron in oxidized form; ferrous: containing iron in reduced (form)
+ferr/i, ferr/o | Iron | Ferric; Ferrous | ferric: containing iron in oxidized form; ferrous: containing iron in reduced
 glyc/o | sugar, Glucose | Hypoglycemia | low blood glucose
 kal/ | potassium | hyperkalemia | excess potassium in the blood
 lip/o | lipid | liposuction | surgical removal of fat by suction
-hydr/o | water, fluid | dehydrate | to loss water (sic → "to lose water")
+hydr/o | water, fluid | dehydrate | to loss water
 natr/i | sodium | hyponatremia | decrease of sodium in the blood
 prote/o | protein | Proteolysis | Dissolving of protein in blood
 steat/o | fatty | steatorrhea | Fatty diarrhea
@@ -72,12 +73,12 @@ p23 Number Prefixes in Medical & Pharmaceutical Terms (infographic): Mono-(one):
 PREFIX - NUMBERS (p24 image + p25 text):
 prim/i | First | primigravida | Woman pregnant (gravid) for the first time
 mon/o | One | Monoclonal | A cell colony (clone) arising from a single cell
-uni | One | Unicellular | Organism composed of (a) single cell
+uni | One | Unicellular | Organism composed of a single cell
 PREFIX - NUMBERS cont (p26 text, p27-28 diplopia/bicuspid aortic valve pictures, p29 text, p30 image):
 di | Two, twice | diplegia | double Paralysis
 diplo | Double | Diplopia | Double vision
 bi | Two, twice | Bicuspid | Having or ending in two points (cuspus)
-hemi | Half, one side | Hemithorax (slide: "Hemi thorax") | One side of the chest (thorax)
+hemi | Half, one side | Hemi thorax | One side of the chest (thorax)
 semi | Half, partial | Semilunar | Resembling a half moon
 tri | Three | Triad | Group of three
 quadr/i | Four | Quadrant | One fourth of an area
@@ -104,7 +105,7 @@ leuk/o | white, colorless | Leukoplakia | White patches in the mouth
 melan/o | black, dark | melanin | The dark pigment that colors the hair and skin
 xanth/o | yellow | Xanthoma | Yellow raised area on the skin
 icter/ | yellow | Icterus index | Index denoting blood concentration of bilirubin
-polio, glauc/o | grey | Polioencephalitis (slide: Polioencephalities) | Inflammation of the gray matter of the brain
+Polio, Glauc/o | grey | Polioencephalities | Inflammation of the gray matter of the brain
 verd/o | Green | Verdoglobin | Any of several green compounds derived from hemoglobin or related compounds
 PREFIX - DIRECTION (p38-39, p41):
 ab | Away from | Abduct | To move away from the midline (Abduction/Adduction picture)
@@ -117,7 +118,7 @@ endo | In, within | Endoscope | Device for viewing the inside of a cavity or org
 PREFIX - POSITION (p40 image):
 dextro | Right | Dextrocardia | (rare condition) Location of the heart in the right side of the chest
 levo | Left | Levorotation | Rotation towards the left
-sinistro/o (slide "Sinistro/o") | Left | Sinistrad | Towards the left
+Sinistro/o | Left | Sinistrad | Towards the left
 ecto | Out, outside | Ectopic | Outside the normal position (Ectopic pregnancy: outside the uterus)
 p42 end (AI).
 ## L4 (made by Assoc. Prof. Amira Ahmed, edited by Dr. Hagar Belal Ahmad) - all images
@@ -139,7 +140,7 @@ Xero- | Dry | Xerosis (Xer|osis) | dryness of the skin or membranes
 p6 PREFIX - DEGREE:
 Hyper- | Over, excess, Abnormally high, High, increased | Hypertension | High blood pressure
 Hypo- | Under - below, abnormally low, decreased | Hypoventilation | Lower amount of air entering lungs
-Olig/o | Few or deficiency of | Oligospermia; Oliguria (slide: Oligouria) | Low number of sperm in the semen; Low urine out put
+Olig/o | Few or deficiency of | Oligospermia; Oligouria | Low number of sperm in the semen; Low urine out put
 Pan- | All | Panplegia | Total paralysis
 Super- | Above or excess | Superinfection | Second infection
 p7 NEGATIVE PREFIX:
@@ -152,7 +153,7 @@ p9 SUFFIX intro: Suffixes are the ending part of medical terms. Suffixes tend to
 p10 SUFFIX - SPECIALTIES:
 Indicates a FIELD of study: -logy | Study of | Physiology | Study of function in a living organism; -iatrics | Field of medicine | Pediatrics | Study of treatment of children diseases; -iatry | Field of medicine | Psychiatry | Study of treatment of mental illness
 Indicates a PERSON (specialist): -ist | Specialist in a field of study | Dentist | Specialist in study and treatment of the teeth and mouth; -ian, -ician | Specialist in a field of study | Physician | Practitioner of medicines; -iatrist | Specialist in a field of study | Podiatrist | Specialist in study and treatment of the foot
-p11 SUFFIX "CONDITION OF" (Suffix|Example|Meaning):
+p11 SUFFIX "CONDITION OF" — slide title: Suffix that mean "condition of" (-Suffix | Example | Meaning):
 -ia | Insomnia | Inability to sleep
 -iasis | Amebiasis | Infection with ameba (parasites)
 -ism | Alcoholism | Chronic dependence or addiction to alcohol
@@ -161,7 +162,7 @@ p11 SUFFIX "CONDITION OF" (Suffix|Example|Meaning):
 p12 Suffix pertaining to disease - definition of disease: "A condition of a person, animal, or plant in which its body or structure is harmed because an organ or part is unable to work as it usually does".
 p13 SUFFIX - DISEASE (1):
 -algia | Pain | Gastralgia | Pain in the stomach
--dysnia, -dynia (slide lists both "-Dysnia" and "-Dynia") | Pain | Cephalodynia | Pain in the head (headache)
+-Dysnia, -Dynia | Pain | Cephalodynia | Pain in the head (headache)
 -cele | Hernia | cystocele | Hernia of the urinary bladder (cyst/o)
 -clasis, -clasia | Breaking | Karyoclasis (karyolysis); Cytoclasis | Breaking of a cell nucleus; Breaking or destruction of a cell
 -itis | Inflammation | Colitis | Inflammation of the Colon
@@ -169,9 +170,9 @@ p13 SUFFIX - DISEASE (1):
 p14 SUFFIX - DISEASE (2):
 -oma | Tumor | Lipoma (lip = fat, oma = tumor) | Fatty tumor
 -pathy | Any disease of | Neuropathy (neuro = nerve, pathy = disease) | Any disease of the nervous system
--rrhage, -rrhagia (slide "-Rhage -Rhagia") | Bursting, Profuse flow | Hemorrhage (hemor = blood, rhage = flow) | Profuse flow of blood
--rrhea (slide "-Rhea") | Flow, discharge | Diarrhea (diarr = through, hea = flow [sic]) | Frequent passage of watery stool
--rrhexis (slide "-Rhexis") | Rupture (slide: "Reputure") | Amniorrhexis (amnio = amniotic sac, rhexis = rupture) | Rupture (slide: "Rapture") of the amniotic sac (bag of waters)
+-Rhage, -Rhagia | Bursting, Profuse flow | Hemorrhage (hemor = blood, rhage = flow) | Profuse flow of blood
+-Rhea | Flow, discharge | Diarrrhea (diarr = through, hea = flow) | Frequent passage of watery stool
+-Rhexis | Reputure | Amniorrhexis (amnio = amniotic sac, rhexis = rupture) | Rapture of the amniotic sac (bag of waters)
 -schisis | Fissure, splitting | Retinoschisis (retino = retina, schisis = splitting) | Splitting of the retina of the eye
 p15-16 condolence slides - EXCLUDE.
 NO slide on "Medical idioms".
@@ -203,7 +204,30 @@ p6 SUFFIX - SURGERY (2):
 -tomy | Incision, cutting | Laparotomy | Surgical incision of the abdominal wall
 -tripsy | Crushing | Lithotripsy | Crushing of a stone
 p7 Adjective Suffix: "A suffix added to a root word to form an adjective."
-p8 ADJECTIVE SUFFIXES - suffixes that mean "pertaining to": -ac Cardiac (heart); -al Skeletal (skeleton); -ar Muscular (muscles); -ary Urinary (urine); -ic Pelvic (pelvis); -ical Surgical (surgery); -ile Febrile (fever); -ous Venous (a vein); -ive Effective (Pertaining to having and [sic: an] intended effect).
-suffixes that mean "Similar to": -form Epileptiform (Like or resembling epilepsy); -oid Mucoid (Like or resembling mucus).
+p8 ADJECTIVE SUFFIXES - suffixes that mean “pertaining to” (-Suffix | example | Definitions):
+-ac | Cardiac | Pertaining to the heart
+-al | Skeletal | Pertaining to the skeleton
+-ar | Muscular | Pertaining to the muscles
+-ary | Urinary | Pertaining to the urine
+-ic | Pelvic | Pertaining to the pelvis
+-ical | Surgical | Pertaining to surgery
+-ile | Febrile | Pertaining to fever
+-ous | Venous | Pertaining to a vein
+-ive | Effective | Pertaining to having and intended effect
+suffixes that mean “Similar to”:
+-form | Epileptiform | Like or resembling epilepsy
+-oid | Mucoid | Like or resembling mucus
 p9 Term Work Exam: Sunday 25 October 2026, Analytical Pharmaceutical Chemistry Lab 1, exam from Lecture 1 to Lecture 5; according to group distribution; adhere to assigned lab/group/time.
 ## Training sheet: Faculty of Pharmacy – October 6 University, Medical Terminology, Dr. Hagar Belal Ahmad Abo-Zalam. "Medical terminology Training Sheet (Medical term Structure Analysis)". Columns: Medical term | Term structure (Prefix- / -Root- / -Suffix) | Meaning | Meaning of the Medical term. 10 blank rows.
+## Colour splits shown on the slides (example words coloured prefix=blue · root=green · suffix=pink)
+L4 p4: ante|nat|al · Pre|dispos|ing · Pro|phylax|is · Post|operat|ive
+L4 p5: Brady|card|ia · Tachy|pnea · Dys|funct|ion · Mal|nutrit|ion · Pachy|derm|a · Xer|osis
+L4 p6: Hyper|tens|ion · Hypo|ventilat|ion · Oligo|sperm|ia · Oligo|ur|ia · Pan|pleg|ia · Super|infect|ion
+L4 p7: dis|infect|ant · In|contin|ence · Im|balance · Un|consc|ious · An|alges|ia
+L4 p13: Gastr|algia · Cephalo|dynia · cysto|cele · Karyo|clasis · Cyto|clasis · Col|itis · Hepato|megaly
+L4 p14: Lip|oma · Neuro|pathy · Hemor|rhage · Diarr|rhea (labels: diarr = through, hea = flow) · Amnior|rhexis (labels: amnio = amniotic sac, rhexis = rupture) · Retino|schisis
+L5 p3: Cardio|graph · Roentgeno|graphy · radio|graphy · Sono|gram · Spiro|meter · Opto|metry · Cysto|scope · Laparo|scopy
+L5 p4: Ventri|cle · Bronchi|ole · Mac|ula · Pust|ule
+L5 p5: Celio|centesis · Tonsill|ectomy · Pleuro|desis · Utero|pexy · Septo|plasty · Hernio|rrhaphy
+L5 p6: Colo|stomy · Derma|tome · Laparo|tomy · Litho|tripsy
+L5 p8: Cardi|ac · Skelet|al · Muscul|ar · Urin|ary · Pelv|ic · Surg|ical · Febr|ile · Ven|ous · Effect|ive · Epilepti|form · Muc|oid

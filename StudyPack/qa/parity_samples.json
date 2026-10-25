@@ -1,0 +1,1185 @@
+[
+ {
+  "id": "q292",
+  "resp": "ORTHOSIS",
+  "why": "correct, case",
+  "py": {
+   "ok": true,
+   "code": null,
+   "ar": "صح",
+   "credit": 1,
+   "max": 1
+  }
+ },
+ {
+  "id": "q292",
+  "resp": "orthsis",
+  "why": "o dropped",
+  "py": {
+   "ok": false,
+   "code": "E3",
+   "ar": "قريبة جدًا! الـ o هنا جزء من الـ prefix ortho (straight, upright, L3·s34) — اكتبه كامل. الصح: orthosis (L3·s34).",
+   "index": 4,
+   "credit": 0,
+   "max": 1
+  }
+ },
+ {
+  "id": "q292",
+  "resp": "ortohosis",
+  "why": "o added",
+  "py": {
+   "ok": false,
+   "code": "E3",
+   "ar": "قريبة جدًا! الـ o بعد \"ort\" زيادة — مش موجودة في كلمة السلايد. الصح: orthosis (L3·s34).",
+   "index": 3,
+   "credit": 0,
+   "max": 1
+  }
+ },
+ {
+  "id": "q292",
+  "resp": "orthossi",
+  "why": "letters swapped",
+  "py": {
+   "ok": false,
+   "code": "E5",
+   "ar": "المعنى في السلايد: orthosis. الكلمة زي السلايد: Orthosis — ortho = straight, upright (L3·s34).",
+   "credit": 0,
+   "max": 1
+  }
+ },
+ {
+  "id": "q533",
+  "resp": "DISINFECTANT",
+  "why": "correct, case",
+  "py": {
+   "ok": true,
+   "code": null,
+   "ar": "صح",
+   "credit": 1,
+   "max": 1
+  }
+ },
+ {
+  "id": "q533",
+  "resp": "disoinfectant",
+  "why": "o added",
+  "py": {
+   "ok": false,
+   "code": "E4",
+   "ar": "قريبة جدًا! الـ o بعد \"dis\" زيادة — مفيش combining vowel قبل suffix بيبدأ بـ vowel (L2·s13). الصح: disinfectant (L4·s7).",
+   "index": 3,
+   "credit": 0,
+   "max": 1
+  }
+ },
+ {
+  "id": "q533",
+  "resp": "disinfectatn",
+  "why": "letters swapped",
+  "py": {
+   "ok": false,
+   "code": "E3",
+   "ar": "قريبة جدًا! أول حرف غلط عند الحرف رقم 11 (\"disinfecta‹t›…\"). راجع الإملاء زي السلايد. الصح: disinfectant (L4·s7).",
+   "index": 10,
+   "credit": 0,
+   "max": 1
+  }
+ },
+ {
+  "id": "q524",
+  "resp": "MALNUTRITION",
+  "why": "correct, case",
+  "py": {
+   "ok": true,
+   "code": null,
+   "ar": "صح",
+   "credit": 1,
+   "max": 1
+  }
+ },
+ {
+  "id": "q524",
+  "resp": "malnutritin",
+  "why": "o dropped",
+  "py": {
+   "ok": false,
+   "code": "E4",
+   "ar": "قريبة جدًا! ناقص الـ combining vowel o بعد \"malnutriti\" — بنحط o بين root و root أو قبل suffix بيبدأ بـ consonant (L2·s10). الصح: malnutrition (L4·s5).",
+   "index": 10,
+   "credit": 0,
+   "max": 1
+  }
+ },
+ {
+  "id": "q524",
+  "resp": "malonutrition",
+  "why": "o added",
+  "py": {
+   "ok": false,
+   "code": "E3",
+   "ar": "قريبة جدًا! الـ o بعد \"mal\" زيادة — مش موجودة في كلمة السلايد. الصح: malnutrition (L4·s5).",
+   "index": 3,
+   "credit": 0,
+   "max": 1
+  }
+ },
+ {
+  "id": "q524",
+  "resp": "malnutritino",
+  "why": "letters swapped",
+  "py": {
+   "ok": false,
+   "code": "E3",
+   "ar": "قريبة جدًا! أول حرف غلط عند الحرف رقم 11 (\"malnutriti‹n›…\"). راجع الإملاء زي السلايد. الصح: malnutrition (L4·s5).",
+   "index": 10,
+   "credit": 0,
+   "max": 1
+  }
+ },
+ {
+  "id": "q278",
+  "resp": "BICUSPID",
+  "why": "correct, case",
+  "py": {
+   "ok": true,
+   "code": null,
+   "ar": "صح",
+   "credit": 1,
+   "max": 1
+  }
+ },
+ {
+  "id": "q278",
+  "resp": "bicouspid",
+  "why": "o added",
+  "py": {
+   "ok": false,
+   "code": "E4",
+   "ar": "قريبة جدًا! الـ o بعد \"bic\" زيادة — مفيش combining vowel قبل suffix بيبدأ بـ vowel (L2·s13). الصح: bicuspid (L3·s26).",
+   "index": 3,
+   "credit": 0,
+   "max": 1
+  }
+ },
+ {
+  "id": "q278",
+  "resp": "bicuspdi",
+  "why": "letters swapped",
+  "py": {
+   "ok": false,
+   "code": "E5",
+   "ar": "المعنى في السلايد: bicuspid. الكلمة زي السلايد: Bicuspid — bi = two, twice (L3·s26).",
+   "credit": 0,
+   "max": 1
+  }
+ },
+ {
+  "id": "q304",
+  "resp": "pyorhea",
+  "why": "rrh slip",
+  "py": {
+   "ok": false,
+   "code": "E3",
+   "ar": "قريبة جدًا! أول حرف غلط عند الحرف رقم 5 (\"pyor‹h›…\"). الـ rrh لازم r مرتين + h. الصح: pyorrhea (L3·s20).",
+   "index": 4,
+   "credit": 0,
+   "max": 1
+  }
+ },
+ {
+  "id": "q384",
+  "resp": "hernia",
+  "why": "errorMap key",
+  "py": {
+   "ok": false,
+   "code": "E1",
+   "ar": "hernia دا معنى -cele (L4·s13). الإجابة هنا: -dynia = pain (L4·s13).",
+   "credit": 0,
+   "max": 1
+  }
+ },
+ {
+  "id": "q682",
+  "resp": "lapartomy",
+  "why": "errorMap key",
+  "py": {
+   "ok": false,
+   "code": "E1",
+   "ar": "lapartomy — راجع القاعدة 1: A combining vowel is used to join root to root as well as to any suffix beginning with a consonant.",
+   "credit": 0,
+   "max": 1
+  }
+ },
+ {
+  "id": "q180",
+  "resp": "true,good,easy,normal",
+  "why": "errorMap key",
+  "py": {
+   "ok": false,
+   "code": "E1",
+   "ar": "true, good, easy, normal دا معنى eu (L3·s32). الإجابة هنا: re = again, back (L3·s35).",
+   "credit": 0,
+   "max": 1
+  }
+ },
+ {
+  "id": "q542",
+  "resp": "",
+  "why": "blank",
+  "py": {
+   "ok": false,
+   "code": "E6",
+   "ar": "الإجابة: psychiatry. الكلمة زي السلايد: Psychiatry — -iatry = field of medicine (L4·s10).",
+   "credit": 0,
+   "max": 1
+  }
+ },
+ {
+  "id": "q542",
+  "resp": "idk",
+  "why": "idk",
+  "py": {
+   "ok": false,
+   "code": "E6",
+   "ar": "الإجابة: psychiatry. الكلمة زي السلايد: Psychiatry — -iatry = field of medicine (L4·s10).",
+   "credit": 0,
+   "max": 1
+  }
+ },
+ {
+  "id": "q542",
+  "resp": "gastr/o",
+  "why": "other slide part",
+  "py": {
+   "ok": false,
+   "code": "E5",
+   "ar": "المعنى في السلايد: psychiatry. الكلمة زي السلايد: Psychiatry — -iatry = field of medicine (L4·s10).",
+   "credit": 0,
+   "max": 1
+  }
+ },
+ {
+  "id": "q542",
+  "resp": "pain",
+  "why": "other meaning",
+  "py": {
+   "ok": false,
+   "code": "E5",
+   "ar": "المعنى في السلايد: psychiatry. الكلمة زي السلايد: Psychiatry — -iatry = field of medicine (L4·s10).",
+   "credit": 0,
+   "max": 1
+  }
+ },
+ {
+  "id": "q495",
+  "resp": "",
+  "why": "blank",
+  "py": {
+   "ok": false,
+   "code": "E6",
+   "ar": "الإجابة: -dynia. -dynia معناها pain — مثال السلايد: Cephalodynia = Pain in the head (headache) (L4·s13).",
+   "credit": 0,
+   "max": 1
+  }
+ },
+ {
+  "id": "q495",
+  "resp": "idk",
+  "why": "idk",
+  "py": {
+   "ok": false,
+   "code": "E6",
+   "ar": "الإجابة: -dynia. -dynia معناها pain — مثال السلايد: Cephalodynia = Pain in the head (headache) (L4·s13).",
+   "credit": 0,
+   "max": 1
+  }
+ },
+ {
+  "id": "q495",
+  "resp": "gastr/o",
+  "why": "other slide part",
+  "py": {
+   "ok": false,
+   "code": "E5",
+   "ar": "المعنى في السلايد: -dynia. -dynia معناها pain — مثال السلايد: Cephalodynia = Pain in the head (headache) (L4·s13). نفس الجزء في: cephalodynia (L4·s13).",
+   "credit": 0,
+   "max": 1
+  }
+ },
+ {
+  "id": "q495",
+  "resp": "pain",
+  "why": "other meaning",
+  "py": {
+   "ok": false,
+   "code": "E5",
+   "ar": "\"pain\" كلمة من تعريف cephalodynia (Pain in the head (headache))، مش معنى -dynia. معنى -dynia على السلايد: pain (L4·s13).",
+   "credit": 0,
+   "max": 1
+  }
+ },
+ {
+  "id": "q294",
+  "resp": "",
+  "why": "blank",
+  "py": {
+   "ok": false,
+   "code": "E6",
+   "ar": "الإجابة: semilunar. الكلمة زي السلايد: Semilunar — semi = half, partial (L3·s29).",
+   "credit": 0,
+   "max": 1
+  }
+ },
+ {
+  "id": "q294",
+  "resp": "idk",
+  "why": "idk",
+  "py": {
+   "ok": false,
+   "code": "E6",
+   "ar": "الإجابة: semilunar. الكلمة زي السلايد: Semilunar — semi = half, partial (L3·s29).",
+   "credit": 0,
+   "max": 1
+  }
+ },
+ {
+  "id": "q294",
+  "resp": "gastr/o",
+  "why": "other slide part",
+  "py": {
+   "ok": false,
+   "code": "E5",
+   "ar": "المعنى في السلايد: semilunar. الكلمة زي السلايد: Semilunar — semi = half, partial (L3·s29).",
+   "credit": 0,
+   "max": 1
+  }
+ },
+ {
+  "id": "q294",
+  "resp": "pain",
+  "why": "other meaning",
+  "py": {
+   "ok": false,
+   "code": "E5",
+   "ar": "المعنى في السلايد: semilunar. الكلمة زي السلايد: Semilunar — semi = half, partial (L3·s29).",
+   "credit": 0,
+   "max": 1
+  }
+ },
+ {
+  "id": "q548",
+  "resp": "cytoclasia",
+  "why": "accept-not-slide",
+  "py": {
+   "ok": true,
+   "code": "OK-NS",
+   "ar": "صح كتركيب، بس الكلمة اللي في السلايد cytoclasis — اكتبها هي في الامتحان.",
+   "credit": 1,
+   "max": 1
+  }
+ },
+ {
+  "id": "q651",
+  "resp": "pimple",
+  "why": "meaning of a part of the term",
+  "py": {
+   "ok": false,
+   "code": "E2",
+   "ar": "دا معنى الـ root pust، مش الجزء المطلوب. التقسيم: pust | ule (L5·s4). الإجابة: small (L5·s4).",
+   "credit": 0,
+   "max": 1
+  }
+ },
+ {
+  "id": "q735",
+  "resp": "vision",
+  "why": "meaning of a part of the term",
+  "py": {
+   "ok": false,
+   "code": "E5",
+   "ar": "\"vision\" كلمة من تعريف optometry (Measurement of vision (opt/o) for glasses)، مش معنى -metry. معنى -metry على السلايد: measurement (L5·s3).",
+   "credit": 0,
+   "max": 1
+  }
+ },
+ {
+  "id": "q695",
+  "resp": "stone",
+  "why": "meaning of a part of the term",
+  "py": {
+   "ok": false,
+   "code": "E2",
+   "ar": "دا معنى الـ root lith، مش الجزء المطلوب. التقسيم: lith | o | tripsy (L5·s6). الإجابة: lithotripsy (L5·s6).",
+   "credit": 0,
+   "max": 1
+  }
+ },
+ {
+  "id": "q722",
+  "resp": "no mistake",
+  "why": "P11 no mistake",
+  "py": {
+   "ok": true,
+   "code": null,
+   "ar": "صح",
+   "credit": 1,
+   "max": 1
+  }
+ },
+ {
+  "id": "q722",
+  "resp": "No mistake",
+  "why": "P11 correct",
+  "py": {
+   "ok": true,
+   "code": null,
+   "ar": "صح",
+   "credit": 1,
+   "max": 1
+  }
+ },
+ {
+  "id": "q576",
+  "resp": "no mistake",
+  "why": "P11 no mistake",
+  "py": {
+   "ok": false,
+   "code": "E1",
+   "ar": "فيه غلطة واحدة: الغلطة: الطالب حط معنى pachy- (thick, L4·s5) لـ brady. الصح: brady = slow. الباقي صح. → Slow heart rate",
+   "credit": 0,
+   "max": 1
+  }
+ },
+ {
+  "id": "q576",
+  "resp": "brady = slow",
+  "why": "P11 correct",
+  "py": {
+   "ok": true,
+   "code": null,
+   "ar": "صح",
+   "credit": 1,
+   "max": 1
+  }
+ },
+ {
+  "id": "q575",
+  "resp": "no mistake",
+  "why": "P11 no mistake",
+  "py": {
+   "ok": false,
+   "code": "E1",
+   "ar": "فيه غلطة واحدة: الغلطة: الطالب حط معنى olig/o (few or deficiency of, L4·s6) لـ pan. الصح: pan = all. الباقي صح. → Total paralysis",
+   "credit": 0,
+   "max": 1
+  }
+ },
+ {
+  "id": "q575",
+  "resp": "pan = all",
+  "why": "P11 correct",
+  "py": {
+   "ok": true,
+   "code": null,
+   "ar": "صح",
+   "credit": 1,
+   "max": 1
+  }
+ },
+ {
+  "id": "q585",
+  "resp": "no mistake",
+  "why": "P11 no mistake",
+  "py": {
+   "ok": false,
+   "code": "E1",
+   "ar": "فيه غلطة واحدة: الغلطة: الطالب حط معنى -megaly (enlargement, L4·s13) لـ pathy. الصح: pathy = disease. الباقي صح. → Any disease of the nervous system",
+   "credit": 0,
+   "max": 1
+  }
+ },
+ {
+  "id": "q585",
+  "resp": "pathy = disease",
+  "why": "P11 correct",
+  "py": {
+   "ok": true,
+   "code": null,
+   "ar": "صح",
+   "credit": 1,
+   "max": 1
+  }
+ },
+ {
+  "id": "q392",
+  "resp": "field of medicine",
+  "why": "mcq right",
+  "py": {
+   "ok": true,
+   "code": null,
+   "ar": "صح",
+   "credit": 1,
+   "max": 1
+  }
+ },
+ {
+  "id": "q392",
+  "resp": "breaking",
+  "why": "mcq wrong",
+  "py": {
+   "ok": false,
+   "code": "E1",
+   "ar": "اخترت breaking، بس المطلوب field of medicine. -iatry معناها field of medicine — مثال السلايد: Psychiatry = Study of treatment of mental illness (L4·s10).",
+   "credit": 0,
+   "max": 1
+  }
+ },
+ {
+  "id": "q625",
+  "resp": "A combining vowel is used to join root to root as well as to any suffix beginning with a consonant.",
+  "why": "mcq right",
+  "py": {
+   "ok": true,
+   "code": null,
+   "ar": "صح",
+   "credit": 1,
+   "max": 1
+  }
+ },
+ {
+  "id": "q625",
+  "resp": "When a prefix ends in a vowel and the root begins with a vowel, the final vowel is dropped from the prefix.",
+  "why": "mcq wrong",
+  "py": {
+   "ok": false,
+   "code": "E1",
+   "ar": "اخترت When a prefix ends in a vowel and the root begins with a vowel, the final vowel is dropped from the prefix.، بس المطلوب A combining vowel is used to join root to root as well as to any suffix beginning with a consonant.. Sonogram: القاعدة 1 — A combining vowel is used to join root to root as well as to any suffix beginning with a consonant. (L2·s10)",
+   "credit": 0,
+   "max": 1
+  }
+ },
+ {
+  "id": "q013",
+  "resp": "False — the prefix is “a word part attached to the beginning of a word root to modify its meaning”",
+  "why": "mcq right",
+  "py": {
+   "ok": true,
+   "code": null,
+   "ar": "صح",
+   "credit": 1,
+   "max": 1
+  }
+ },
+ {
+  "id": "q013",
+  "resp": "True",
+  "why": "mcq wrong",
+  "py": {
+   "ok": false,
+   "code": "E1",
+   "ar": "اخترت True، بس المطلوب False — the prefix is “a word part attached to the beginning of a word root to modify its meaning”. الـ prefix في الأول (beginning)، والـ suffix في الآخر (end). (L1·s11)",
+   "credit": 0,
+   "max": 1
+  }
+ },
+ {
+  "id": "q033",
+  "resp": true,
+  "why": "tf true",
+  "py": {
+   "ok": true,
+   "code": null,
+   "ar": "صح",
+   "credit": 1,
+   "max": 1
+  }
+ },
+ {
+  "id": "q033",
+  "resp": false,
+  "why": "tf false",
+  "py": {
+   "ok": false,
+   "code": "E1",
+   "ar": "صح (L2 p17). (L2·s17) صح (L2 p17). (L2·s17)",
+   "credit": 0,
+   "max": 1
+  }
+ },
+ {
+  "id": "q158",
+  "resp": true,
+  "why": "tf true",
+  "py": {
+   "ok": false,
+   "code": "E1",
+   "ar": "endo = in, within; \"out, outside\" is ecto. غلط: endo = in, within، و \"out, outside\" دي ecto (L3·s40). endo معناها in, within — مثال السلايد: Endoscope = Device for viewing the inside of a cavity or organ (L3·s41).",
+   "credit": 0,
+   "max": 1
+  }
+ },
+ {
+  "id": "q158",
+  "resp": false,
+  "why": "tf false",
+  "py": {
+   "ok": true,
+   "code": null,
+   "ar": "صح",
+   "credit": 1,
+   "max": 1
+  }
+ },
+ {
+  "id": "q376",
+  "resp": true,
+  "why": "tf true",
+  "py": {
+   "ok": false,
+   "code": "E1",
+   "ar": "Suffixes are the ENDING part of medical terms. غلط — الـ suffix هو الـ ending part. (L4·s9)",
+   "credit": 0,
+   "max": 1
+  }
+ },
+ {
+  "id": "q376",
+  "resp": false,
+  "why": "tf false",
+  "py": {
+   "ok": true,
+   "code": null,
+   "ar": "صح",
+   "credit": 1,
+   "max": 1
+  }
+ },
+ {
+  "id": "q367",
+  "resp": [
+   "fever, fire",
+   "pus"
+  ],
+  "why": "typed2 right",
+  "py": {
+   "ok": true,
+   "code": null,
+   "ar": "صح",
+   "credit": 2,
+   "max": 2,
+   "notes": []
+  }
+ },
+ {
+  "id": "q367",
+  "resp": [
+   "fever, fire",
+   "pain"
+  ],
+  "why": "typed2 half",
+  "py": {
+   "ok": false,
+   "code": "E5",
+   "ar": "المعنى في السلايد: pus. pyr/o = fever, fire (L3·s20)؛ py/o = pus (L3·s20). نفس الجزء في: pyorrhea (L3·s20)، pyretic (L3·s20).",
+   "credit": 1,
+   "max": 2,
+   "notes": [
+    {
+     "blank": 2,
+     "ok": false,
+     "code": "E5",
+     "ar": "المعنى في السلايد: pus. pyr/o = fever, fire (L3·s20)؛ py/o = pus (L3·s20). نفس الجزء في: pyorrhea (L3·s20)، pyretic (L3·s20)."
+    }
+   ]
+  }
+ },
+ {
+  "id": "q367",
+  "resp": [
+   "",
+   ""
+  ],
+  "why": "typed2 blank",
+  "py": {
+   "ok": false,
+   "code": "E6",
+   "ar": "الإجابة: fever, fire. pyr/o = fever, fire (L3·s20)؛ py/o = pus (L3·s20).",
+   "credit": 0,
+   "max": 2,
+   "notes": [
+    {
+     "blank": 1,
+     "ok": false,
+     "code": "E6",
+     "ar": "الإجابة: fever, fire. pyr/o = fever, fire (L3·s20)؛ py/o = pus (L3·s20)."
+    },
+    {
+     "blank": 2,
+     "ok": false,
+     "code": "E6",
+     "ar": "الإجابة: pus. pyr/o = fever, fire (L3·s20)؛ py/o = pus (L3·s20)."
+    }
+   ]
+  }
+ },
+ {
+  "id": "q363",
+  "resp": [
+   "right",
+   "left"
+  ],
+  "why": "typed2 right",
+  "py": {
+   "ok": true,
+   "code": null,
+   "ar": "صح",
+   "credit": 2,
+   "max": 2,
+   "notes": []
+  }
+ },
+ {
+  "id": "q363",
+  "resp": [
+   "right",
+   "pain"
+  ],
+  "why": "typed2 half",
+  "py": {
+   "ok": false,
+   "code": "E5",
+   "ar": "المعنى في السلايد: left. dextro = right (L3·s40)؛ sinistro/o = left (L3·s40). نفس الجزء في: dextrocardia (L3·s40)، sinistrad (L3·s40).",
+   "credit": 1,
+   "max": 2,
+   "notes": [
+    {
+     "blank": 2,
+     "ok": false,
+     "code": "E5",
+     "ar": "المعنى في السلايد: left. dextro = right (L3·s40)؛ sinistro/o = left (L3·s40). نفس الجزء في: dextrocardia (L3·s40)، sinistrad (L3·s40)."
+    }
+   ]
+  }
+ },
+ {
+  "id": "q363",
+  "resp": [
+   "",
+   ""
+  ],
+  "why": "typed2 blank",
+  "py": {
+   "ok": false,
+   "code": "E6",
+   "ar": "الإجابة: right. dextro = right (L3·s40)؛ sinistro/o = left (L3·s40).",
+   "credit": 0,
+   "max": 2,
+   "notes": [
+    {
+     "blank": 1,
+     "ok": false,
+     "code": "E6",
+     "ar": "الإجابة: right. dextro = right (L3·s40)؛ sinistro/o = left (L3·s40)."
+    },
+    {
+     "blank": 2,
+     "ok": false,
+     "code": "E6",
+     "ar": "الإجابة: left. dextro = right (L3·s40)؛ sinistro/o = left (L3·s40)."
+    }
+   ]
+  }
+ },
+ {
+  "id": "q732",
+  "resp": [
+   "-gram",
+   "a record of data"
+  ],
+  "why": "typed2 right",
+  "py": {
+   "ok": true,
+   "code": null,
+   "ar": "صح",
+   "credit": 2,
+   "max": 2,
+   "notes": []
+  }
+ },
+ {
+  "id": "q732",
+  "resp": [
+   "-gram",
+   "pain"
+  ],
+  "why": "typed2 half",
+  "py": {
+   "ok": false,
+   "code": "E5",
+   "ar": "المعنى في السلايد: a record of data. -gram = a record of data (L5·s3)؛ الباقي (-cle, -ule, -ula) = small. نفس الجزء في: ventricle (L5·s4)، sonogram (L5·s3).",
+   "credit": 1,
+   "max": 2,
+   "notes": [
+    {
+     "blank": 2,
+     "ok": false,
+     "code": "E5",
+     "ar": "المعنى في السلايد: a record of data. -gram = a record of data (L5·s3)؛ الباقي (-cle, -ule, -ula) = small. نفس الجزء في: ventricle (L5·s4)، sonogram (L5·s3)."
+    }
+   ]
+  }
+ },
+ {
+  "id": "q732",
+  "resp": [
+   "",
+   ""
+  ],
+  "why": "typed2 blank",
+  "py": {
+   "ok": false,
+   "code": "E6",
+   "ar": "الإجابة: -gram. -gram = a record of data (L5·s3)؛ الباقي (-cle, -ule, -ula) = small.",
+   "credit": 0,
+   "max": 2,
+   "notes": [
+    {
+     "blank": 1,
+     "ok": false,
+     "code": "E6",
+     "ar": "الإجابة: -gram. -gram = a record of data (L5·s3)؛ الباقي (-cle, -ule, -ula) = small."
+    },
+    {
+     "blank": 2,
+     "ok": false,
+     "code": "E6",
+     "ar": "الإجابة: a record of data. -gram = a record of data (L5·s3)؛ الباقي (-cle, -ule, -ula) = small."
+    }
+   ]
+  }
+ },
+ {
+  "id": "q559",
+  "resp": [
+   "",
+   "lip=fat",
+   "oma=tumor",
+   "Fatty tumor"
+  ],
+  "why": "analyze right",
+  "py": {
+   "ok": true,
+   "code": null,
+   "ar": "صح",
+   "credit": 4,
+   "max": 4,
+   "firstWrong": null,
+   "notes": []
+  }
+ },
+ {
+  "id": "q559",
+  "resp": [
+   "",
+   "lip=pain",
+   "oma=tumor",
+   "Fatty tumor"
+  ],
+  "why": "analyze wrong meaning",
+  "py": {
+   "ok": false,
+   "code": "E5",
+   "ar": "Root: المعنى في السلايد: fat. التحليل زي السلايد: Lipoma = lip (fat) + oma (tumor) → Fatty tumor (L4·s14)",
+   "credit": 3,
+   "max": 4,
+   "firstWrong": "Root",
+   "notes": [
+    {
+     "field": "Root",
+     "code": "E5",
+     "ar": "Root: المعنى في السلايد: fat. التحليل زي السلايد: Lipoma = lip (fat) + oma (tumor) → Fatty tumor (L4·s14)"
+    }
+   ]
+  }
+ },
+ {
+  "id": "q559",
+  "resp": [
+   "",
+   "xyz=fat",
+   "oma=tumor",
+   "Fatty tumor"
+  ],
+  "why": "analyze wrong part",
+  "py": {
+   "ok": false,
+   "code": "E2",
+   "ar": "Root: التقسيم زي السلايد — lip = fat",
+   "credit": 3,
+   "max": 4,
+   "firstWrong": "Root",
+   "notes": [
+    {
+     "field": "Root",
+     "code": "E2",
+     "ar": "Root: التقسيم زي السلايد — lip = fat"
+    }
+   ]
+  }
+ },
+ {
+  "id": "q559",
+  "resp": [
+   "",
+   "",
+   "",
+   ""
+  ],
+  "why": "analyze empty",
+  "py": {
+   "ok": false,
+   "code": "E6",
+   "ar": "Root: التقسيم زي السلايد — lip = fat",
+   "credit": 1,
+   "max": 4,
+   "firstWrong": "Root",
+   "notes": [
+    {
+     "field": "Root",
+     "code": "E6",
+     "ar": "Root: التقسيم زي السلايد — lip = fat"
+    },
+    {
+     "field": "Suffix",
+     "code": "E6",
+     "ar": "Suffix: التقسيم زي السلايد — oma = tumor"
+    },
+    {
+     "field": "Medical meaning",
+     "code": "E6",
+     "ar": "Medical meaning زي السلايد: Fatty tumor"
+    }
+   ]
+  }
+ },
+ {
+  "id": "q372",
+  "resp": [
+   "hypo=under - below, abnormally low, decreased",
+   "natr=sodium",
+   "emia=blood condition",
+   "Decrease of sodium in the blood"
+  ],
+  "why": "analyze right",
+  "py": {
+   "ok": true,
+   "code": null,
+   "ar": "صح",
+   "credit": 4,
+   "max": 4,
+   "firstWrong": null,
+   "notes": []
+  }
+ },
+ {
+  "id": "q372",
+  "resp": [
+   "hypo=pain",
+   "natr=sodium",
+   "emia=blood condition",
+   "Decrease of sodium in the blood"
+  ],
+  "why": "analyze wrong meaning",
+  "py": {
+   "ok": false,
+   "code": "E5",
+   "ar": "Prefix: المعنى في السلايد: under - below, abnormally low, decreased. التحليل زي السلايد: Hyponatremia = hypo (under - below, abnormally low, decreased) + natr (sodium) + emia (blood condition) → Decrease of sodium in the blood (L3·s16) نفس الجزء في: hypoventilation (L4·s6).",
+   "credit": 3,
+   "max": 4,
+   "firstWrong": "Prefix",
+   "notes": [
+    {
+     "field": "Prefix",
+     "code": "E5",
+     "ar": "Prefix: المعنى في السلايد: under - below, abnormally low, decreased. التحليل زي السلايد: Hyponatremia = hypo (under - below, abnormally low, decreased) + natr (sodium) + emia (blood condition) → Decrease of sodium in the blood (L3·s16) نفس الجزء في: hypoventilation (L4·s6)."
+    }
+   ]
+  }
+ },
+ {
+  "id": "q372",
+  "resp": [
+   "xyz=under - below, abnormally low, decreased",
+   "natr=sodium",
+   "emia=blood condition",
+   "Decrease of sodium in the blood"
+  ],
+  "why": "analyze wrong part",
+  "py": {
+   "ok": false,
+   "code": "E2",
+   "ar": "Prefix: التقسيم زي السلايد — hypo = under - below, abnormally low, decreased",
+   "credit": 3,
+   "max": 4,
+   "firstWrong": "Prefix",
+   "notes": [
+    {
+     "field": "Prefix",
+     "code": "E2",
+     "ar": "Prefix: التقسيم زي السلايد — hypo = under - below, abnormally low, decreased"
+    }
+   ]
+  }
+ },
+ {
+  "id": "q372",
+  "resp": [
+   "",
+   "",
+   "",
+   ""
+  ],
+  "why": "analyze empty",
+  "py": {
+   "ok": false,
+   "code": "E6",
+   "ar": "Prefix: التقسيم زي السلايد — hypo = under - below, abnormally low, decreased",
+   "credit": 0,
+   "max": 4,
+   "firstWrong": "Prefix",
+   "notes": [
+    {
+     "field": "Prefix",
+     "code": "E6",
+     "ar": "Prefix: التقسيم زي السلايد — hypo = under - below, abnormally low, decreased"
+    },
+    {
+     "field": "Root",
+     "code": "E6",
+     "ar": "Root: التقسيم زي السلايد — natr = sodium"
+    },
+    {
+     "field": "Suffix",
+     "code": "E6",
+     "ar": "Suffix: التقسيم زي السلايد — emia = blood condition"
+    },
+    {
+     "field": "Medical meaning",
+     "code": "E6",
+     "ar": "Medical meaning زي السلايد: Decrease of sodium in the blood"
+    }
+   ]
+  }
+ },
+ {
+  "id": "q374",
+  "resp": [
+   "dextro=right",
+   "card=heart",
+   "ia=condition of",
+   "Location of the heart in the right side of the chest"
+  ],
+  "why": "analyze right",
+  "py": {
+   "ok": true,
+   "code": null,
+   "ar": "صح",
+   "credit": 4,
+   "max": 4,
+   "firstWrong": null,
+   "notes": []
+  }
+ },
+ {
+  "id": "q374",
+  "resp": [
+   "dextro=pain",
+   "card=heart",
+   "ia=condition of",
+   "Location of the heart in the right side of the chest"
+  ],
+  "why": "analyze wrong meaning",
+  "py": {
+   "ok": false,
+   "code": "E5",
+   "ar": "Prefix: المعنى في السلايد: right. التحليل زي السلايد: Dextrocardia = dextro (right) + card (heart) + ia (condition of) → Location of the heart in the right side of the chest (L3·s40) نفس الجزء في: insomnia (L4·s11).",
+   "credit": 3,
+   "max": 4,
+   "firstWrong": "Prefix",
+   "notes": [
+    {
+     "field": "Prefix",
+     "code": "E5",
+     "ar": "Prefix: المعنى في السلايد: right. التحليل زي السلايد: Dextrocardia = dextro (right) + card (heart) + ia (condition of) → Location of the heart in the right side of the chest (L3·s40) نفس الجزء في: insomnia (L4·s11)."
+    }
+   ]
+  }
+ },
+ {
+  "id": "q374",
+  "resp": [
+   "xyz=right",
+   "card=heart",
+   "ia=condition of",
+   "Location of the heart in the right side of the chest"
+  ],
+  "why": "analyze wrong part",
+  "py": {
+   "ok": false,
+   "code": "E2",
+   "ar": "Prefix: التقسيم زي السلايد — dextro = right",
+   "credit": 3,
+   "max": 4,
+   "firstWrong": "Prefix",
+   "notes": [
+    {
+     "field": "Prefix",
+     "code": "E2",
+     "ar": "Prefix: التقسيم زي السلايد — dextro = right"
+    }
+   ]
+  }
+ },
+ {
+  "id": "q374",
+  "resp": [
+   "",
+   "",
+   "",
+   ""
+  ],
+  "why": "analyze empty",
+  "py": {
+   "ok": false,
+   "code": "E6",
+   "ar": "Prefix: التقسيم زي السلايد — dextro = right",
+   "credit": 0,
+   "max": 4,
+   "firstWrong": "Prefix",
+   "notes": [
+    {
+     "field": "Prefix",
+     "code": "E6",
+     "ar": "Prefix: التقسيم زي السلايد — dextro = right"
+    },
+    {
+     "field": "Root",
+     "code": "E6",
+     "ar": "Root: التقسيم زي السلايد — card = heart"
+    },
+    {
+     "field": "Suffix",
+     "code": "E6",
+     "ar": "Suffix: التقسيم زي السلايد — ia = condition of"
+    },
+    {
+     "field": "Medical meaning",
+     "code": "E6",
+     "ar": "Medical meaning زي السلايد: Location of the heart in the right side of the chest"
+    }
+   ]
+  }
+ }
+]

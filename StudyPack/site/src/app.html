@@ -75,8 +75,11 @@ p{margin:.4em 0}
   .tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);justify-content:space-around;padding:4px 4px calc(4px + env(safe-area-inset-bottom))}
   .tab{flex:1;font-size:.72rem;padding:4px 2px}
   main{padding-bottom:calc(var(--bar) + 24px)}
+  html{scroll-padding-bottom:calc(var(--bar) + 16px)}
+  .qnav.stick{position:sticky;bottom:calc(var(--bar) + env(safe-area-inset-bottom));z-index:5;background:var(--bg);padding:8px 0;margin-bottom:-8px} /* focus()/scrollIntoView keep buttons clear of the fixed tab bar */
 }
-main{padding-top:20px;padding-bottom:40px}
+@media (min-width:860px){main{padding-bottom:40px}} /* after the phone rule it used to override it */
+main{padding-top:20px}
 .view{display:none}
 .view.on{display:block}
 
@@ -184,6 +187,19 @@ details.sec>summary h3{font-size:1.05rem;flex:1}
 .fb{margin-top:14px;padding:14px;border-radius:12px;border:1px solid var(--line);background:var(--surface)}
 .fb.ok{border-color:var(--ok);background:var(--ok-bg)}
 .fb.no{border-color:var(--bad);background:var(--bad-bg)}
+.fb.half{border-color:var(--v-ink);background:var(--v-bg)}
+.marks{font-family:var(--display);margin-left:6px}
+.ecode{display:inline-block;margin-top:6px;font-size:.8rem;padding:2px 8px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-family:var(--arabic)}
+.fbnotes{margin:6px 0 0;padding-inline-start:18px}
+.lvl{display:inline-block;margin-top:10px;padding:1px 8px;border-radius:6px;font-weight:600;font-size:.78rem;background:var(--sunk);color:var(--ink-2)}
+.lvl-easy{background:var(--r-bg);color:var(--r-ink)} .lvl-medium{background:var(--p-bg);color:var(--p-ink)} .lvl-hard{background:var(--v-bg);color:var(--v-ink)} .lvl-max{background:var(--s-bg);color:var(--s-ink)}
+.bform{display:grid;gap:10px;margin-top:6px}
+.fld{display:grid;gap:2px;min-width:0}
+.fld input{min-width:0;width:100%;min-height:46px;padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:var(--surface);font-size:1.05rem;color:var(--ink)}
+.frow{display:grid;gap:2px}
+.pair{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr);gap:8px}
+.fieldres{margin-top:8px;width:100%;table-layout:fixed;overflow-wrap:anywhere} .fieldres th{width:34%} .fieldres th{text-align:left;white-space:nowrap} .fieldres td:first-child{width:1.4em}
+.seg.lv button{padding:4px 4px;font-size:.92rem}
 .notice{margin:8px 0 0;padding:8px 12px;border-radius:10px;background:var(--v-bg);color:var(--ink)}
 .fb .verdict{font-weight:600}
 .diff{font-family:var(--display);font-weight:700;font-size:1.4rem;letter-spacing:.02em}
@@ -245,7 +261,14 @@ const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { c
 const LECS = [1, 2, 3, 4, 5];
 const ref = (lec, slide) => `<span class="ref">L${lec} · slide ${esc(slide)}</span>`;
 const isAr = s => /[؀-ۿ]/.test(s || "");
-const bidi = s => esc(s).replace(/[A-Za-z][A-Za-z0-9\/+=()., -]*[A-Za-z0-9)]|[A-Za-z]/g, m => `<bdi dir="ltr">${m}</bdi>`);
+/* wrap each English run in an LTR isolate inside Arabic text. A hyphen stuck to the word ("-ist", "hypo-") belongs to
+   the run, otherwise RTL moves it to the wrong side. Matched on the raw text, escaped per piece (entities stay whole). */
+const BIDI_RX = /-?[A-Za-z][A-Za-z0-9\/+=()., '"‹›∅…·:-]*[A-Za-z0-9)›…-]|-?[A-Za-z]-?/g;
+function bidi(s) {
+  s = String(s ?? ""); let out = "", last = 0;
+  for (const m of s.matchAll(BIDI_RX)) { out += esc(s.slice(last, m.index)) + `<bdi dir="ltr">${esc(m[0])}</bdi>`; last = m.index + m[0].length; }
+  return out + esc(s.slice(last));
+}
 const txt = s => isAr(s) ? `<span class="ar" dir="rtl">${bidi(s)}</span>` : esc(s);
 /* colour a word part: "mon/o" -> mon + /o (vowel) */
 function partHTML(p, kind) {
@@ -261,6 +284,221 @@ const norm = s => String(s || "").toLowerCase().normalize("NFKC").replace(/[\s\-
 const STOP = new Set(["the", "and", "for", "with", "into", "from", "pertaining", "condition", "abnormal", "abnormally", "state"]);
 const tokens = m => String(m).toLowerCase().split(/[^a-z]+/).filter(w => w.length > 2 && !STOP.has(w));
 const overlap = (a, b) => { if (String(a).toLowerCase().trim() === String(b).toLowerCase().trim()) return true; const t = new Set(tokens(a)); return tokens(b).some(w => t.has(w)); };
+
+/*GRADER:BEGIN — JS port of tools/quizlib.py (assembly + E1–E6 grading). Keep in sync; qa/grader_parity.js compares both. */
+const QL = (() => {
+  const LEVELS = ["easy", "medium", "hard", "max"];
+  const MIX = { easy: 20, medium: 35, hard: 30, max: 15 };
+  const BLANK = new Set(["", "?", "-", "idk", "i don't know", "dont know", "مش عارف"]);
+  const reEsc = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  /* Python's (?<![a-z])w(?![a-z]) without lookbehind (older Safari can't parse it) */
+  const hasWord = (w, text) => new RegExp("(^|[^a-z])" + reEsc(w) + "(?![a-z])").test(text);
+  function norm(s) {
+    s = (s == null ? "none" : String(s)).normalize("NFKC").toLowerCase().trim();
+    s = s.replace(/–/g, "-").replace(/—/g, "-").replace(/’/g, "'").replace(/“/g, '"').replace(/”/g, '"');
+    s = s.replace(/\s+/g, " ");
+    s = s.replace(/^(the )?(prefix|suffix|root|answer|it is|it's)\s*(is\s*)?[:=]?\s*/, "");
+    return s.replace(/^[ .]+|[ .]+$/g, "");
+  }
+  const nform = s => norm(s).replace(/[\s\-/]/g, "");
+  function lev(a, b) {
+    let prev = Array.from({ length: b.length + 1 }, (_, i) => i);
+    for (let i = 1; i <= a.length; i++) {
+      const cur = [i];
+      for (let j = 1; j <= b.length; j++) cur.push(Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] !== b[j - 1] ? 1 : 0)));
+      prev = cur;
+    }
+    return prev[b.length];
+  }
+  function firstDiff(a, b) { const n = Math.min(a.length, b.length); for (let i = 0; i < n; i++) if (a[i] !== b[i]) return i; return n; }
+  function slip(r, a) {
+    if (a.includes("rrh") && !r.includes("rrh")) return "الـ rrh لازم r مرتين + h";
+    const rng = n => Array.from({ length: Math.max(0, n) }, (_, i) => i);
+    if (r.length === a.length - 1 && rng(a.length - 1).some(i => a[i] === a[i + 1] && a.slice(0, i) + a.slice(i + 1) === r)) return "حرف مضاعف ناقص";
+    if (r.length === a.length + 1 && rng(r.length - 1).some(i => r[i] === r[i + 1] && r.slice(0, i) + r.slice(i + 1) === a)) return "حرف مضاعف زيادة";
+    if (r.replace(/f/g, "ph") === a) return "ph مش f";
+    if (r.length === a.length && [...r].filter((x, i) => x !== a[i]).length === 1) { const i = firstDiff(r, a); const s = new Set([r[i], a[i]]); if (s.size === 2 && s.has("i") && s.has("y")) return "y مش i"; }
+    if (/ae|oe/.test(r) && !/ae|oe/.test(a)) return "دي spelling بريطاني — السلايد أمريكي";
+    return null;
+  }
+  /* small seeded RNG so a quiz can be replayed (the Python one uses random.Random; orders differ, rules don't) */
+  function rngOf(seed) { let t = (seed >>> 0) || 1; return () => { t += 0x6D2B79F5; let x = Math.imul(t ^ (t >>> 15), 1 | t); x ^= x + Math.imul(x ^ (x >>> 7), 61 | x); return ((x ^ (x >>> 14)) >>> 0) / 4294967296; }; }
+  const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
+
+  class Bank {
+    constructor(content) {
+      this.C = content; this.Q = content.questions; this.rows = [];
+      content.sections.forEach(s => s.rows.forEach(r => this.rows.push({ ...r, lec: s.lec, sid: s.id, kind: s.kind })));
+      this.analysis = {}; content.analysis.forEach(a => { this.analysis[a.term.toLowerCase()] = a; });
+      this.lecOf = {}; content.meta.lectures.forEach(l => { this.lecOf[l.file] = l.n; });
+    }
+    _ref(e) { return `L${has(this.lecOf, e.file) ? this.lecOf[e.file] : "?"}·s${e.page}`; }
+    _prefixO(best, j) {
+      for (const row of this.rows) {
+        if (row.kind !== "prefix") continue;
+        for (let f of [row.part, ...row.alts]) { f = nform(f); if (f.endsWith("o") && f.length === j + 1 && best.startsWith(f)) return row; }
+      }
+      return null;
+    }
+    _text(q) { return norm(q.q + " " + (q.options || []).map(String).join(" ")); }
+    _leaks(a, b) { const tb = this._text(b); return (a.leak || []).some(t => hasWord(t, tb)); }
+    _parts(q) { return new Set(q.tests.map(t => t.split(",")[0].replace(/[^a-z]/g, "")).filter(Boolean)); }
+    assemble({ level = "mix", n = 20, lecs = null, patterns = null, seed = 0, order = "ramp" } = {}) {
+      const rnd = rngOf(seed), shuf = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+      const pool = this.Q.filter(q => (!lecs || lecs.includes(q.lec)) && (!patterns || patterns.includes(q.pattern)));
+      let want;
+      if (level !== "mix") want = { [level]: n };
+      else {
+        const raw = {}; want = {};
+        LEVELS.forEach(l => { raw[l] = n * MIX[l] / 100; want[l] = Math.floor(raw[l]); });
+        const extra = n - LEVELS.reduce((s, l) => s + want[l], 0);
+        LEVELS.slice().sort((x, y) => (raw[y] - Math.floor(raw[y])) - (raw[x] - Math.floor(raw[x]))).slice(0, extra).forEach(l => want[l]++);
+      }
+      const picked = [];
+      for (const l of LEVELS) {
+        const cand = shuf(pool.filter(q => q.difficulty === l));
+        let got = 0;
+        for (const c of cand) {
+          if (got >= (want[l] || 0)) break;
+          if (picked.some(p => this._leaks(c, p) || this._leaks(p, c))) continue;
+          if (picked.some(p => p.term && p.term === c.term)) continue;
+          picked.push(c); got++;
+        }
+      }
+      const short = n - picked.length;
+      if (order === "ramp") picked.sort((a, b) => a.score - b.score || a.tie - b.tie); else shuf(picked);
+      const meet = (a, b) => { for (const x of a) if (b.has(x)) return true; return false; };
+      for (let i = 1; i < picked.length; i++) {
+        if (meet(this._parts(picked[i]), this._parts(picked[i - 1]))) {
+          for (let j = i + 1; j < picked.length; j++) {
+            const okPrev = !meet(this._parts(picked[j]), this._parts(picked[i - 1]));
+            const okNext = i + 1 >= picked.length || !meet(this._parts(picked[i]), this._parts(j + 1 < picked.length ? picked[j + 1] : { tests: [] }));
+            if (okPrev && okNext) { [picked[i], picked[j]] = [picked[j], picked[i]]; break; }
+          }
+        }
+      }
+      if (order === "ramp") picked.sort((a, b) => LEVELS.indexOf(a.difficulty) - LEVELS.indexOf(b.difficulty));
+      return [picked, Math.max(0, short)];
+    }
+    _rowOf(part) {
+      const p = nform(part);
+      for (const r of this.rows) if ([r.part, ...r.alts].map(nform).includes(p)) return r;
+      return null;
+    }
+    _samePart(q) {
+      let out = [];
+      for (const t of q.tests) {
+        const r = this._rowOf(t);
+        if (r) out = out.concat(String(r.example).split(/\s*·\s*/).map(e => e.trim()).filter(e => e && e.toLowerCase() !== String(q.term ?? "").toLowerCase()).map(e => `${e} (L${r.lec}·s${r.page})`));
+      }
+      return out.slice(0, 2);
+    }
+    _typed(q, resp, accept, answer, emap) {
+      const r = norm(resp), ref = this._ref(q.evidence[0]);
+      if (BLANK.has(r)) return { ok: false, code: "E6", ar: `الإجابة: ${answer}. ${q.explain_ar}` };
+      if ((q.acceptNotSlide || []).map(norm).includes(r)) return { ok: true, code: "OK-NS", ar: `صح كتركيب، بس الكلمة اللي في السلايد ${answer} — اكتبها هي في الامتحان.` };
+      const accs = [...accept.map(norm), norm(answer)];
+      if (accs.includes(r) || accs.map(nform).includes(nform(r))) return { ok: true, code: null, ar: "صح" };
+      if (q.pattern === "P11") {
+        if (["no mistake", "no mistakes", "none", "correct", "all correct"].includes(r) && q.mistakes) return { ok: false, code: "E1", ar: has(emap, norm("no mistake")) ? emap[norm("no mistake")] : q.explain_ar };
+        if (!q.mistakes) return { ok: false, code: "E1", ar: `التحليل كان صح ومفيهوش غلطة. ${q.explain_ar}` };
+      }
+      const nmap = {}; Object.keys(emap).forEach(k => { nmap[nform(k)] = emap[k]; });
+      if (has(emap, r) || has(nmap, nform(r))) return { ok: false, code: "E1", ar: emap[r] || nmap[nform(r)] };
+      const tests = q.tests.map(nform);
+      for (const row of this.rows) {
+        const forms = [row.part, ...row.alts].map(nform);
+        if (forms.includes(nform(r)) && !tests.includes(nform(r)) && nform(r).length >= 2)
+          return { ok: false, code: "E1", ar: `${row.part} معناها ${row.meaning} (L${row.lec}·s${row.page})، ومش هي المطلوبة هنا. الإجابة: ${answer}. ${q.explain_ar}` };
+      }
+      const a = this.analysis[String(q.term ?? "").toLowerCase()];
+      if (a) {
+        for (const p of a.parts) {
+          if (p.meaning && norm(p.meaning) === r && !tests.includes(nform(p.text))) {
+            const split = a.parts.map(x => x.text).join(" | ");
+            const trT = q.tests.find(t => this._rowOf(t)), tr = trT ? this._rowOf(trT) : null;
+            const aref = tr ? ` (L${tr.lec}·s${tr.page})` : "";
+            return { ok: false, code: "E2", ar: `دا معنى الـ ${p.type} ${p.text}، مش الجزء المطلوب. التقسيم: ${split} (${ref}). الإجابة: ${answer}${aref}.` };
+          }
+        }
+      }
+      let best = accs[0], bd = lev(r, best);
+      for (const x of accs) { const d = lev(r, x); if (d < bd) { best = x; bd = d; } }
+      if (bd > 0 && bd <= Math.max(1, Math.floor(best.length / 5)) && best.length >= 4) {
+        const i = firstDiff(r, best);
+        let miss = null, extra = null;
+        for (let j = 0; j < best.length; j++) if (best[j] === "o" && best.slice(0, j) + best.slice(j + 1) === r) { miss = j; break; }
+        for (let j = 0; j < r.length; j++) if (r[j] === "o" && r.slice(0, j) + r.slice(j + 1) === best) { extra = j; break; }
+        const j = miss != null ? miss : extra;
+        const pre = miss != null ? this._prefixO(best, j) : null;
+        if (pre) return { ok: false, code: "E3", ar: `قريبة جدًا! الـ o هنا جزء من الـ prefix ${pre.part} (${pre.meaning}, L${pre.lec}·s${pre.page}) — اكتبه كامل. الصح: ${answer} (${ref}).`, index: i };
+        if (miss != null) return { ok: false, code: "E4", ar: `قريبة جدًا! ناقص الـ combining vowel o بعد "${best.slice(0, j)}" — بنحط o بين root و root أو قبل suffix بيبدأ بـ consonant (L2·s10). الصح: ${answer} (${ref}).`, index: i };
+        if (extra != null && best.slice(j, j + 1) !== "" && "aeiouy".includes(best.slice(j, j + 1))) return { ok: false, code: "E4", ar: `قريبة جدًا! الـ o بعد "${r.slice(0, j)}" زيادة — مفيش combining vowel قبل suffix بيبدأ بـ vowel (L2·s13). الصح: ${answer} (${ref}).`, index: i };
+        if (extra != null) return { ok: false, code: "E3", ar: `قريبة جدًا! الـ o بعد "${r.slice(0, j)}" زيادة — مش موجودة في كلمة السلايد. الصح: ${answer} (${ref}).`, index: i };
+        return { ok: false, code: "E3", ar: `قريبة جدًا! أول حرف غلط عند الحرف رقم ${i + 1} ("${r.slice(0, i)}‹${r.slice(i, i + 1) || "∅"}›…"). ${slip(r, best) || "راجع الإملاء زي السلايد"}. الصح: ${answer} (${ref}).`, index: i };
+      }
+      for (const t of q.tests) {
+        const row = this._rowOf(t);
+        if (row && r.length >= 3 && hasWord(r, norm(row.definition)))
+          return { ok: false, code: "E5", ar: `"${resp}" كلمة من تعريف ${row.example} (${row.definition})، مش معنى ${row.part}. معنى ${row.part} على السلايد: ${row.meaning} (L${row.lec}·s${row.page}).` };
+      }
+      const same = this._samePart(q);
+      const tail = same.length ? ` نفس الجزء في: ${same.join("، ")}.` : "";
+      return { ok: false, code: "E5", ar: `المعنى في السلايد: ${answer}. ${q.explain_ar}${tail}` };
+    }
+    grade(q, resp) {
+      const k = q.kind;
+      if (k === "mcq") {
+        if (resp === q.key) return { ok: true, code: null, ar: "صح", credit: 1, max: 1 };
+        const em = q.errorMap || {}, nr = norm(resp);
+        return { ok: false, code: "E1", ar: (has(em, nr) && em[nr]) || `اخترت ${resp}، بس المطلوب ${q.key}. ${q.explain_ar}`, credit: 0, max: 1 };
+      }
+      if (k === "tf") {
+        const ok = (resp === true || String(resp).toLowerCase() === "true") === q.answer;
+        return { ok, code: ok ? null : "E1", ar: ok ? "صح" : (q.correction || q.explain_ar) + " " + q.explain_ar, credit: ok ? 1 : 0, max: 1 };
+      }
+      if (k === "typed") { const res = this._typed(q, resp, q.accept, q.key, q.errorMap || {}); return { ...res, credit: res.ok ? 1 : 0, max: 1 }; }
+      const split = v => Array.isArray(v) ? v : String(v).split("|").map(x => x.trim());
+      if (k === "typed2") {
+        const resps = split(resp), notes = []; let credit = 0;
+        q.blanks.forEach((b, i) => {
+          const res = this._typed(q, i < resps.length ? resps[i] : "", b.accept, b.answer, b.errorMap || {});
+          if (res.ok) credit++; else notes.push({ blank: i + 1, ...res });
+        });
+        const first = notes[0] || null;
+        return { ok: credit === q.blanks.length, code: first ? first.code : null, ar: first ? first.ar : "صح", credit, max: q.blanks.length, notes };
+      }
+      /* analyze: field by field, partial credit, first wrong field named */
+      const resps = split(resp), notes = []; let credit = 0, first = null;
+      q.fields.forEach((f, i) => {
+        const rr = i < resps.length ? resps[i] : "";
+        let ok;
+        if (has(f, "accept_part")) {
+          const at = rr.indexOf("="), part = at < 0 ? rr : rr.slice(0, at), mean = at < 0 ? "" : rr.slice(at + 1);
+          const okP = f.accept_part.map(nform).includes(nform(part));
+          const okM = !f.meaningGraded || f.accept_meaning.map(norm).includes(norm(mean));
+          ok = okP && okM;
+          if (!ok) {
+            if (!okP) notes.push({ field: f.name, code: nform(part) ? "E2" : "E6", ar: `${f.name}: التقسيم زي السلايد — ${f.answer}` });
+            else { const sub = this._typed(q, mean, f.accept_meaning, f.accept_meaning.length ? f.accept_meaning[0] : "", {}); notes.push({ field: f.name, code: sub.code, ar: `${f.name}: ${sub.ar}` }); }
+          }
+        } else if (f.name === "Medical meaning") {
+          const r = norm(rr), kw = f.keywords || [];
+          ok = f.accept.map(norm).includes(r) || (kw.length > 0 && kw.filter(w => r.includes(w)).length / kw.length >= 0.6);
+          if (!ok) notes.push({ field: f.name, code: r ? "E5" : "E6", ar: `Medical meaning زي السلايد: ${f.answer}` });
+        } else {
+          ok = f.accept.map(norm).includes(norm(rr));
+          if (!ok) notes.push({ field: f.name, code: "E2", ar: `${f.name}: ${f.answer}` });
+        }
+        if (ok) credit++;
+        if (!ok && first == null) first = f.name;
+      });
+      return { ok: credit === q.fields.length, code: notes.length ? notes[0].code : null, ar: notes.length ? notes[0].ar : "صح", credit, max: q.fields.length, firstWrong: first, notes };
+    }
+  }
+  return { Bank, norm, nform, lev, LEVELS };
+})();
+/*GRADER:END*/
 
 /* ---------- cards ---------- */
 const CARDS = [], CARD = {}, PART_IDX = {}, EX_IDX = {}, SEC_OF = {};
@@ -614,6 +852,27 @@ function makeQuiz(mode, lecs, n) {
   const p = shuffle(pool(mode, lecs)).slice(0, n);
   return p.map(q => q.type === "mcq" ? { ...q, options: shuffle(q.options) } : q);
 }
+/* exam levels: questions from the graded bank (content.json kind/difficulty), assembled and graded by QL */
+const BANK = new QL.Bank(DATA);
+const LEVELS = { easy: "Easy", medium: "Medium", hard: "Hard", max: "Max", mix: "Mix" };
+const LEVEL_HINT = { easy: "Recognise parts and meanings: MCQ and true/false.", medium: "Write meanings and spellings yourself.",
+  hard: "Full word analysis and two-blank questions, with partial marks.", max: "Find the mistake in a student’s analysis, transfer to new terms.",
+  mix: "All levels, ordered from easy to hard (20% easy, 35% medium, 30% hard, 15% max)." };
+const CODE_AR = { E1: "لخبطة مع جزء شبهه", E2: "جزء غلط", E3: "إملاء", E4: "combining vowel", E5: "معنى غلط", E6: "مفيش إجابة", "OK-NS": "صح، بس مش كلمة السلايد" };
+function bankRef(q) {
+  if (q.term && CARD["an:" + q.term]) return "an:" + q.term;
+  for (const t of q.tests || []) {
+    if (CARD[t]) return t;
+    const r = BANK._rowOf(t);
+    if (r && CARD[`r:${r.sid}:${r.part}`]) return `r:${r.sid}:${r.part}`;
+  }
+  return null;
+}
+const asBankQ = q => ({ ...q, bank: true, ref: bankRef(q), options: q.kind === "mcq" ? shuffle(q.options) : q.options });
+function makeLevelQuiz(level, lecs, n) {
+  const [qs, short] = BANK.assemble({ level, n, lecs, seed: Math.floor(Math.random() * 1e9) });
+  return { qs: qs.map(asBankQ), short };
+}
 function checkTyped(q, input) {
   const t = norm(input);
   return t.length > 0 && q.answer.some(a => norm(a) === t);
@@ -633,6 +892,10 @@ function closest(q, input) {
 }
 const lcp = (a, b) => { let i = 0; while (i < a.length && a[i] === b[i]) i++; return i; };
 function retryForm(q) {
+  if (q.bank) { /* another bank question on the same word part, else the same one reshuffled */
+    const alt = shuffle(BANK.Q.filter(x => x.id !== q.id && x.lec === q.lec && x.tests.some(t => q.tests.includes(t))))[0];
+    return asBankQ(alt || q);
+  }
   const c = q.ref && CARD[q.ref];
   if (c && c.part && !["numchart"].includes(c.secId)) return (q.type === "part" || /^Which /.test(q.q)) ? genMeaningMcq(c) : genPartQ(c);
   if (c && c.kind === "plural") {
@@ -643,18 +906,20 @@ function retryForm(q) {
   return q.type === "mcq" ? { ...q, options: shuffle(q.options) } : q;
 }
 const PR = {
-  cfg: (c => ({ ...c, n: fitLen(c.n) }))(store.get("prCfg", { mode: "mixed", lecs: LECS.slice(), n: 15 })),
+  cfg: (c => ({ ...c, n: fitLen(c.n) }))(store.get("prCfg", { mode: "mix", lecs: LECS.slice(), n: 25 })),
   run: null,
   start(cfg) {
     this.cfg = { mode: cfg.mode, lecs: cfg.lecs.slice(), n: cfg.n }; store.set("prCfg", this.cfg);
-    const label = `${({ mixed: "Mixed", spell: "Spelling", mcq: "MCQ", analyze: "Analyse" })[cfg.mode]}, ${cfg.lecs.map(l => "L" + l).join(" ")}, ${cfg.n}`;
+    let label = `${({ mixed: "Mixed", spell: "Spelling", mcq: "MCQ", analyze: "Analyse", ...LEVELS })[cfg.mode]}, ${cfg.lecs.map(l => "L" + l).join(" ")}, ${cfg.n}`;
     store.set("last", { type: "practice", ...this.cfg, label });
-    const qs = cfg.qs || makeQuiz(cfg.mode, cfg.lecs, cfg.n);
-    this.begin(qs, label, qs.length < cfg.n ? `Only ${qs.length} questions exist for this selection (you chose ${cfg.n}). Add lectures or switch to Mixed for more.` : "");
+    let qs = cfg.qs;
+    if (!qs && LEVELS[cfg.mode]) qs = makeLevelQuiz(cfg.mode, cfg.lecs, cfg.n).qs;
+    qs = qs || makeQuiz(cfg.mode, cfg.lecs, cfg.n);
+    this.begin(qs, label, qs.length < cfg.n ? `Only ${qs.length} questions exist for this selection (you chose ${cfg.n}). Add lectures or switch to Mix for more.` : "");
   },
   begin(qs, label, notice = "") { this.run = { qs, i: 0, results: [], answered: false, label, revealed: false, notice }; renderPractice(); },
-  record(q, ok) {
-    const r = this.run; r.results.push({ q, ok }); r.answered = true;
+  record(q, ok, credit = ok ? 1 : 0, max = 1) {
+    const r = this.run; r.results.push({ q, ok, credit, max }); r.answered = true;
     const h = store.get("qhist", {}); const x = h[q.lec] = h[q.lec] || { right: 0, total: 0 }; x.total++; if (ok) x.right++; store.set("qhist", h);
     if (q.ref && CARD[q.ref]) { if (!ok) setBox(q.ref, 1); }
     if (!ok && q.type === "self" && !q.again) r.qs.splice(Math.min(r.i + 4, r.qs.length), 0, { ...q, again: true });
@@ -665,10 +930,85 @@ function feedback(ok, q, extra = "") {
   const corr = q.correction ? `<div style="margin-top:6px"><b>Correction:</b> ${esc(q.correction)}</div>` : "";
   return `<div class="fb ${ok ? "ok" : "no"}" role="status"><div class="verdict">${ok ? "✅ Correct" : "❌ Not quite"}</div>${extra}${corr}${ex}<div style="margin-top:6px">${ref(q.lec, q.slide)}</div></div>`;
 }
+const arBlock = s => s ? `<div class="ar" dir="rtl" lang="ar" style="margin-top:6px">${bidi(s)}</div>` : "";
+function bankFeedback(q, res, extra = "") {
+  const part = res.max > 1 ? `<span class="marks">${res.credit} / ${res.max} marks</span>` : "";
+  const verdict = res.ok ? "✅ Correct" : res.credit > 0 ? "◐ Partly right" : "❌ Not quite";
+  const tag = res.code ? `<span class="ecode" lang="ar" dir="rtl">${esc(res.code)} · ${esc(CODE_AR[res.code] || "")}</span>` : "";
+  const notes = (res.notes || []).length > 1 ? `<ul class="fbnotes">${res.notes.map(n => `<li>${arBlock(n.ar)}</li>`).join("")}</ul>` : arBlock(res.ok && !res.code ? q.explain_ar : res.ar);
+  return `<div class="fb ${res.ok ? "ok" : res.credit > 0 ? "half" : "no"}" role="status"><div class="verdict">${verdict} ${part}</div>${tag}${extra}${notes}<div style="margin-top:6px">${ref(q.lec, q.slide)}</div></div>`;
+}
+/* one bank question: mcq / tf / typed / typed2 (two blanks) / analyze (training-sheet fields) */
+function renderBankQ(v, R, q) {
+  const dis = R.answered ? "disabled" : "";
+  const inp = (id, lab, ph = "") => `<label class="fld"><span class="small muted">${esc(lab)}</span><input id="${id}" ${dis} placeholder="${esc(ph)}" autocapitalize="off" autocorrect="off" spellcheck="false" autocomplete="off"></label>`;
+  let body = "";
+  if (q.kind === "mcq") body = `<div class="opts">${q.options.map((o, k) => `<button class="opt" data-o="${k}">${esc(o)}</button>`).join("")}</div>`;
+  else if (q.kind === "tf") body = `<div class="opts"><button class="opt" data-tf="1">True</button><button class="opt" data-tf="0">False</button></div>`;
+  else if (q.kind === "typed") body = `<form class="typed" id="tform" autocomplete="off"><input id="tin" aria-label="Your answer" autocapitalize="off" autocorrect="off" spellcheck="false" ${dis}><button class="btn primary" ${dis}>Check</button></form>`;
+  else if (q.kind === "typed2") body = `<form class="bform" id="tform" autocomplete="off">${q.blanks.map((b, i) => inp("b" + i, `Blank ${i + 1}`)).join("")}<button class="btn primary block" ${dis}>Check</button></form>`;
+  else body = `<form class="bform" id="tform" autocomplete="off"><p class="small muted">Training sheet: write each part and its meaning. Leave a row empty if the term has no such part.</p>${q.fields.map((f, i) => f.name === "Medical meaning"
+      ? inp("f" + i, "Medical meaning")
+      : `<div class="frow"><span class="small muted">${esc(f.name)}</span><div class="pair">${inp("f" + i + "p", "part", ({ Prefix: "e.g. hypo-", Suffix: "e.g. -itis" })[f.name] || "e.g. cardi/o")}${inp("f" + i + "m", "meaning")}</div></div>`).join("")}<button class="btn primary block" ${dis}>Check</button></form>`;
+  v.innerHTML = `<div class="row" style="justify-content:space-between"><span class="small muted">${esc(R.label)}</span><span class="small" id="qnum">${R.i + 1} / ${R.qs.length}</span></div>${R.notice && R.i === 0 ? `<p class="small notice" id="shortMsg" role="status">${esc(R.notice)}</p>` : ""}
+    <div class="prog" aria-hidden="true"><i style="width:${Math.round(100 * R.i / R.qs.length)}%"></i></div>
+    <div class="small"><span class="lvl lvl-${esc(q.difficulty)}">${esc(LEVELS[q.difficulty] || q.difficulty)}</span></div>
+    <div class="qtext">${esc(q.q)}</div>${body}<div id="fbox"></div>
+    <div class="row qnav" style="margin-top:14px"><button class="btn primary ${R.answered ? "" : "hidden"}" id="next" data-a="next">${R.i + 1 < R.qs.length ? "Next question" : "See results"}</button><button class="btn" data-a="quit">End quiz</button></div>`;
+  const done = (res, extra) => { PR.record(q, res.ok, res.credit, res.max); $("#fbox").innerHTML = bankFeedback(q, res, extra); $("#next").classList.remove("hidden"); $("#next").parentElement.classList.add("stick"); $("#next").focus(); };
+  v.onclick = e => {
+    const b = e.target.closest("button"); if (!b) return;
+    if (b.dataset.a === "next") { R.i++; R.answered = false; return renderPractice(); }
+    if (b.dataset.a === "quit") { R.qs = R.qs.slice(0, R.i + (R.answered ? 1 : 0)); R.i = R.qs.length; return renderPractice(); }
+    if (R.answered) return;
+    if (b.dataset.o != null) {
+      const pick = q.options[+b.dataset.o], res = BANK.grade(q, pick);
+      $$(".opt", v).forEach((o, k) => { o.disabled = true; if (q.options[k] === q.key) o.classList.add("right"); else if (k === +b.dataset.o) o.classList.add("wrong"); });
+      done(res);
+    } else if (b.dataset.tf != null) {
+      const res = BANK.grade(q, b.dataset.tf === "1");
+      $$(".opt", v).forEach(o => { o.disabled = true; o.classList.add((o.dataset.tf === "1") === q.key ? "right" : "wrong"); });
+      /* the reference grader repeats explain_ar after the correction; show each once */
+      if (!res.ok) res.ar = [q.correction, q.explain_ar].filter(Boolean).join(" ");
+      done(res, `<div>The statement is <b>${q.key ? "true" : "false"}</b>.</div>`);
+    }
+  };
+  const f = $("#tform");
+  if (!f) return;
+  f.onsubmit = e => {
+    e.preventDefault(); if (R.answered) return;
+    const val = id => ($("#" + id) || {}).value || "";
+    let res, extra = "";
+    if (q.kind === "typed") {
+      const t = val("tin"); if (!t.trim()) return;
+      res = BANK.grade(q, t);
+      if (!res.ok && (res.code === "E3" || res.code === "E4")) { const c = QL.norm(q.key), i = firstDiff(c, t); extra = `<div style="margin-top:6px">Correct: <span class="diff" data-diff="${i}">${esc(c.slice(0, i))}<mark>${esc(c.slice(i, i + 1))}</mark>${esc(c.slice(i + 1))}</span></div><div class="small">You wrote: <b>${esc(t)}</b></div>`; }
+      else if (!res.ok) extra = `<div style="margin-top:6px">Correct: <b>${esc(q.key)}</b></div>`;
+    } else if (q.kind === "typed2") {
+      const rs = q.blanks.map((_, i) => val("b" + i)); if (!rs.some(x => x.trim())) return;
+      res = BANK.grade(q, rs);
+      extra = `<ol class="small" style="margin:6px 0 0 18px">${q.blanks.map((b, i) => `<li>${res.notes.some(n => n.blank === i + 1) ? "✗" : "✓"} ${esc(b.answer)}</li>`).join("")}</ol>`;
+    } else {
+      const rs = q.fields.map((fd, i) => {
+        if (fd.name === "Medical meaning") return val("f" + i);
+        const p = val("f" + i + "p").trim(), m = val("f" + i + "m").trim();
+        return "accept_part" in fd ? `${p}=${m}` : (p || m);
+      });
+      if (!rs.some(x => x.replace("=", "").trim())) return;
+      res = BANK.grade(q, rs);
+      const bad = new Set(res.notes.map(n => n.field));
+      extra = `<table class="ptable fieldres"><tbody>${q.fields.map(fd => `<tr><td>${bad.has(fd.name) ? "✗" : "✓"}</td><th>${esc(fd.name)}</th><td>${esc(fd.answer)}</td></tr>`).join("")}</tbody></table>`;
+    }
+    $$("input", f).forEach(x => x.disabled = true); f.querySelector("button").disabled = true;
+    done(res, extra);
+  };
+  if (!R.answered) { const first = $("input", f); if (first) first.focus({ preventScroll: true }); }
+}
 function renderPractice() {
   const v = $("#v-practice"), R = PR.run;
   if (R && R.i < R.qs.length) {
     const q = R.qs[R.i];
+    if (q.bank) return renderBankQ(v, R, q);
     let body = "";
     if (q.type === "mcq") body = `<div class="opts">${q.options.map((o, k) => `<button class="opt" data-o="${k}">${esc(o)}</button>`).join("")}</div>`;
     else if (q.type === "tf") body = `<div class="opts"><button class="opt" data-tf="1">True</button><button class="opt" data-tf="0">False</button></div>`;
@@ -680,8 +1020,8 @@ function renderPractice() {
     v.innerHTML = `<div class="row" style="justify-content:space-between"><span class="small muted">${esc(R.label)}</span><span class="small" id="qnum">${R.i + 1} / ${R.qs.length}</span></div>${R.notice && R.i === 0 ? `<p class="small notice" id="shortMsg" role="status">${esc(R.notice)}</p>` : ""}
       <div class="prog" aria-hidden="true"><i style="width:${Math.round(100 * R.i / R.qs.length)}%"></i></div>
       ${qtitle}${body}<div id="fbox"></div>
-      <div class="row" style="margin-top:14px"><button class="btn primary ${R.answered ? "" : "hidden"}" id="next" data-a="next">${R.i + 1 < R.qs.length ? "Next question" : "See results"}</button><button class="btn" data-a="quit">End quiz</button></div>`;
-    const showFb = html => { $("#fbox").innerHTML = html; $("#next").classList.remove("hidden"); $("#next").focus(); };
+      <div class="row qnav" style="margin-top:14px"><button class="btn primary ${R.answered ? "" : "hidden"}" id="next" data-a="next">${R.i + 1 < R.qs.length ? "Next question" : "See results"}</button><button class="btn" data-a="quit">End quiz</button></div>`;
+    const showFb = html => { $("#fbox").innerHTML = html; $("#next").classList.remove("hidden"); $("#next").parentElement.classList.add("stick"); $("#next").focus(); };
     v.onclick = e => {
       const b = e.target.closest("button"); if (!b) return;
       if (b.dataset.a === "next") { R.i++; R.answered = false; R.revealed = false; return renderPractice(); }
@@ -718,12 +1058,15 @@ function renderPractice() {
     return;
   }
   if (R && R.qs.length) {
-    const right = R.results.filter(x => x.ok).length, miss = R.results.filter(x => !x.ok);
+    const right = R.results.reduce((s, x) => s + x.credit, 0), total = R.results.reduce((s, x) => s + x.max, 0), miss = R.results.filter(x => !x.ok);
+    const byLvl = {};
+    R.results.filter(x => x.q.bank).forEach(x => { const l = byLvl[x.q.difficulty] = byLvl[x.q.difficulty] || [0, 0]; l[0] += x.credit; l[1] += x.max; });
+    const lvlRow = Object.keys(byLvl).length > 1 ? `<div class="stats" style="margin-top:12px">${QL.LEVELS.filter(l => byLvl[l]).map(l => `<div><b>${byLvl[l][0]}/${byLvl[l][1]}</b>${LEVELS[l]}</div>`).join("")}</div>` : "";
     const bySec = {};
     miss.forEach(x => { const s = (x.q.ref && SEC_OF[x.q.ref]) || "General (L" + x.q.lec + ")"; bySec[s] = (bySec[s] || 0) + 1; });
     const ranked = Object.entries(bySec).sort((a, b) => b[1] - a[1]);
     const uniq = [...new Map(miss.map(x => [x.q.id, x.q])).values()];
-    v.innerHTML = `<h2>Score: ${right} / ${R.results.length}</h2><p class="muted">${esc(R.label)}</p>
+    v.innerHTML = `<h2>Score: ${right} / ${total}</h2><p class="muted">${esc(R.label)}</p>${lvlRow}
       ${ranked.length ? `<div class="panel" style="margin-top:14px"><h3>Weak sections</h3><ol class="ranked">${ranked.map(([s, n]) => `<li>${esc(s)}: ${n} wrong</li>`).join("")}</ol>
       <p class="small muted">Your mistakes are now in “My weak cards” in Flashcards.</p>
       <button class="btn primary block" data-a="retry" style="margin-top:10px">Retry my mistakes in a new form (${uniq.length})</button></div>` : `<p>All correct.</p>`}
@@ -737,8 +1080,9 @@ function renderPractice() {
   }
   const cfg = PR.cfg;
   v.innerHTML = `<h2>Practice</h2>
-    <div class="field"><span class="lab">Mode</span><div class="seg" role="group" aria-label="Mode">${[["mixed", "Mixed"], ["spell", "Spelling"], ["mcq", "MCQ"], ["analyze", "Analyse"]].map(([k, t]) => `<button data-mode="${k}" aria-pressed="${cfg.mode === k}">${t}</button>`).join("")}</div>
-      <p class="small muted">${({ mixed: "MCQ, true/false and typed answers.", spell: "Typed answers only. Spelling counts in the written exam.", mcq: "Multiple choice only.", analyze: "Training-sheet drill: split the term on paper, then check it and grade yourself." })[cfg.mode]}</p></div>
+    <div class="field"><span class="lab">Exam level (easy → hard)</span><div class="seg lv" role="group" aria-label="Exam level">${Object.entries(LEVELS).map(([k, t]) => `<button data-mode="${k}" aria-pressed="${cfg.mode === k}">${t}</button>`).join("")}</div></div>
+    <div class="field"><span class="lab">Or a quick drill</span><div class="seg" role="group" aria-label="Drill">${[["mixed", "Mixed"], ["spell", "Spelling"], ["mcq", "MCQ"], ["analyze", "Analyse"]].map(([k, t]) => `<button data-mode="${k}" aria-pressed="${cfg.mode === k}">${t}</button>`).join("")}</div></div>
+    <p class="small muted">${({ mixed: "MCQ, true/false and typed answers.", spell: "Typed answers only. Spelling counts in the written exam.", mcq: "Multiple choice only.", analyze: "Training-sheet drill: split the term on paper, then check it and grade yourself.", ...LEVEL_HINT })[cfg.mode] || ""}</p>
     <div class="field"><span class="lab">Lectures</span><div class="row">${LECS.map(l => `<button class="chip" data-lec="${l}" aria-pressed="${cfg.lecs.includes(l)}">L${l}</button>`).join("")}</div></div>
     <div class="field"><span class="lab">Length</span><div class="seg" role="group" aria-label="Length">${LENS.map(n => `<button data-n="${n}" aria-pressed="${cfg.n === n}">${n}</button>`).join("")}</div></div>
     <button class="btn primary block" data-a="start" ${cfg.lecs.length ? "" : "disabled"}>Start</button>`;
@@ -779,7 +1123,7 @@ function drawQR() { const q = $("#qr"); if (q && window.QRCode) { q.innerHTML = 
 
 const RENDER = { home: renderHome, study: renderStudy, cards: renderCards, practice: renderPractice, about: renderAbout };
 /* test hooks */
-window.MT = { meaningOfPart, makeQuiz, checkTyped, firstDiff, genPartQ, CARD, CARDS, overlap, QS, retryForm, FC, PR, store };
+window.MT = { meaningOfPart, makeQuiz, checkTyped, firstDiff, genPartQ, CARD, CARDS, overlap, QS, retryForm, FC, PR, store, BANK, QL, makeLevelQuiz, bidi };
 go(location.hash.slice(1) || "home");
 </script>
 </body>
